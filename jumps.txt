@@ -1,0 +1,79 @@
+TIME FROGGER
+
+1.
+N x M  tile world
+32 x 32 pixel tiles
+
+2.
+every tile has a thing.
+
+3.
+things
+
+nothing, floor
+
+man, monster, turtal (annihilation)
+
+
+
+4.
+given a man(ly) action, can compute 
+next state: new nxm grid with things. 
+(also comes with list of manly actions)
+
+5. show the user a preview of all of the next states resulting 
+from manly actions
+(user chooses)
+
+6. 
+now we are in next state.
+
+GOTO 4
+
+
+(4 blown up)
+
+man not on thing
+...
+
+if nothing solid below, can only fall.
+if nothing solid left, can 
+
+
+enumerating!
+
+  ooo
+ ooooo
+ooooooo
+oooxooo
+ooooooo
+ ooooo
+  ooo
+
+
+  ooo
+ ooooo
+ooooooo
+oooxooo
+ooooooo
+ ooooo
+  ooo
+
+what is a jump?
+
+a final displacement, and a list of tiles on the way there.
+
+data jump = 
+     { dest : (int, int),
+       path : (int, int) list
+     }
+
+upone = jmp (-1, 
+
+
+
+
+
+
+
+
