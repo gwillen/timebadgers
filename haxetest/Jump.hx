@@ -22,12 +22,12 @@ rightupone = jmp (1,-1) [(0,-1)]
 rightuptwo  = jmp (1,-2) [(0,-1), (0,-2)]
 rightupthree = jmp (1,-3) [(0,-1), (0,-2), (0,-3)]
 
-overtwo = jmp (2,0) [(1,0)]
-overthree = jmp (3,0) [(1,0), (2,0)]
+
 
 
 */
 
+  // read a jump from an array of coors. First coor is dest, rest are path.
   static function readjmp(a : Array<Coor>) : Jmp {
     if(a.length < 1 )
       { // bad input
@@ -37,13 +37,21 @@ overthree = jmp (3,0) [(1,0), (2,0)]
     return {dest : d, path : a.slice(1)};
   }
 
-  static var upone : Jmp = { dest : {x:0, y:-1}, path : []  } ;
-  static var uptwo : Jmp = { dest : {x:0, y:-2}, path : [ {x:0,y:-1}]  } ;
-  static var upthree : Jmp = { dest : {x:0, y:-3}, path : [{x:0,y:-1},{x:0,y:-2}] } ;
+  static var u : Jmp = { dest : {x:0, y:-1}, path : []  } ;
+  static var uu : Jmp = { dest : {x:0, y:-2}, path : [ {x:0,y:-1}]  } ;
+  static var uuu : Jmp = { dest : {x:0, y:-3}, path : [{x:0,y:-1},{x:0,y:-2}] } ;
+  static var ru : Jmp = { dest: {x:1,y:-1}, path : [{x:0,y:-1}]};
+  static var ruu  : Jmp = { dest : {x:1,y:-2}, path : [{x:0,y:-1}, {x:0,y:-2}]};
+  static var ruuu : Jmp = readjmp( [ {x:1,y:-3},{x:0,y:-1}, {x:0,y:-2}, {x:0,y:-3}]); 
+  static var rr  = readjmp([ {x:2,y:0}, {x:1,y:0}]);
+  static var rru  = readjmp([ {x:2,y:-1}, {x:1,y:-1}]);
+  static var rrr  = readjmp([ {x:3,y:0}, {x:1,y:0}, {x:2,y:0}]);
+  static var rrru  = readjmp([ {x:3,y:0}, {x:1,y:-1}, {x:2,y:-1}]);
 
-  static var rightupone : Jmp = { dest: {x:1,y:-1}, path : [{x:0,y:-1}]};
-  static var rightuptwo  : Jmp = { dest : {x:1,y:-2}, path : [{x:0,y:-1}, {x:0,y:-2}]};
-//  static var rightupthree : Jmp = readjmp();
+  static var rd = readjmp([{x:1,y:1},{x:1,y:0}]);
+  static var rdd = readjmp([{x:1,y:2},{x:1,y:0},{x:1,y:1}]);
+  static var rddd = readjmp([{x:1,y:3},{x:1,y:0},{x:1,y:1},{x:1,y:2}]);
+  static var rdddd = readjmp([{x:1,y:4},{x:1,y:0},{x:1,y:1},{x:1,y:2},{x:1,y:3}]);
 
   static var arr: Array<Int>  = [1,2,3,4,5,6];
 
@@ -62,7 +70,7 @@ overthree = jmp (3,0) [(1,0), (2,0)]
 
 
   static function main() {
-    trace ( stringofjmp(upthree ));
+//    trace ( stringofjmp(rightupthree ));
 
     trace ("Hello world!" + arr[0] + "   " + "length=" + arr.length );
     var mc:flash.display.MovieClip = flash.Lib.current;
