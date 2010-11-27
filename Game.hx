@@ -39,5 +39,6 @@ class Game {
     tiles = new Array<Tile>();
 
     drawTiles(tiles);
-  }
+    flash.ui.Mouse.cursor.show();
+   }
 }
