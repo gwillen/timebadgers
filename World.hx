@@ -15,10 +15,10 @@ class World {
   public static function loadStuff() {
     tile1 = new Loader();
     tile1.contentLoaderInfo.addEventListener(Event.COMPLETE, completeHandler);
-    tile1.load(new URLRequest("assets/tile_dummy1.jpg"));
+    tile1.load(new URLRequest("assets/tile_xwindows.png"));
     tile2 = new Loader();
     tile2.contentLoaderInfo.addEventListener(Event.COMPLETE, completeHandler);
-    tile2.load(new URLRequest("assets/tile_dummy2.jpg"));
+    tile2.load(new URLRequest("assets/tile_suspensionbridge.png"));
     tile3 = new Loader();
     tile3.contentLoaderInfo.addEventListener(Event.COMPLETE, completeHandler);
     tile3.load(new URLRequest("assets/tile_zebra.png"));
@@ -46,6 +46,7 @@ class World {
 
   static var tileSz = 20; // XXX
 
+/*
   function initDrawWorld() {
     var x = 0;
     var y = 0;
@@ -54,7 +55,7 @@ class World {
         var s = new Sprite();
         s.addChild(tile.getImage());
         s.x = x;
-        s.y = y;
+        s.y = y - 12;
         Lib.current.addChild(s);
         x += tileSz;
       }
@@ -62,6 +63,7 @@ class World {
       y += tileSz;
     }
   }
+  */
 }
 
 enum TileType {

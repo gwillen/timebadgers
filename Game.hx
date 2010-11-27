@@ -1,4 +1,6 @@
 import flash.display.MovieClip;
+import flash.display.Sprite;
+import flash.text.TextField;
 import flash.display.Graphics;
 import flash.Lib;
 import flash.display.Loader;
@@ -12,7 +14,10 @@ import flash.events.MouseEvent;
 import flash.events.KeyboardEvent;
 
 class Game {
-  static var mc : MovieClip;
+  static var rootmc : MovieClip;
+  static var mainmc : MovieClip;
+  static var debugtf : TextField;  
+
   // game parameters
   static var screenw:Int = 600;
   static var screenh:Int = 600;
@@ -55,7 +60,7 @@ class Game {
         var tileb:Bitmap = cast thistile.getImage().content;
         var b = new Bitmap(tileb.bitmapData);
         var s = new Sprite();
-        s.y = i * tilesize;
+        s.y = i * tilesize - 12; // 12-pixel overlap zone
         s.x = j * tilesize;
         s.addChild(b);
         Lib.current.addChild(s);
@@ -66,18 +71,27 @@ class Game {
 
 
   static function handleclick(event : MouseEvent) {
-      trace("you mousedowned at " + event.localX + " " + event.localY);
+      debugtf.appendText("you mousedowned at " + event.localX + " " + event.localY + "\n");
   }
 
   static function handlekeydown(event : KeyboardEvent) {
-      trace("you pushed this button: " + event); 
+      debugtf.appendText("you pushed this button: " + event + "\n"); 
+      if(event.charCode == 100){ // 'd'
+         debugtf.visible = !debugtf.visible;
+      }     
   } 
 
   static function main() {
     try {
-      mc = flash.Lib.current;
-      mc.stage.addEventListener(MouseEvent.MOUSE_DOWN, handleclick );
-      mc.stage.addEventListener(KeyboardEvent.KEY_DOWN, handlekeydown );
+      rootmc = flash.Lib.current;    
+      mainmc = new MovieClip(); 
+      debugtf = new TextField();
+      debugtf.width = 600;
+      debugtf.height = 600;
+      rootmc.addChild(mainmc);
+      rootmc.addChild(debugtf);
+      mainmc.stage.addEventListener(MouseEvent.MOUSE_DOWN, handleclick );
+      mainmc.stage.addEventListener(KeyboardEvent.KEY_DOWN, handlekeydown );
 
       //flash.Lib.setErrorHandler(Utils.myHandler);
 
