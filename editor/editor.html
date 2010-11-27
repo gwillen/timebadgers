@@ -1,0 +1,110 @@
+<html>
+<head>
+<title>Untitled Time Badger Game Editor Application</title>
+<style>
+  img.tile {
+    position: absolute;
+  }
+</style>
+<script>
+var tiles = [
+{ gfx: null, img: null },
+{ gfx: "char_turtlel.png", img: null },
+{ gfx: "char_turtler.png", img: null },
+{ gfx: "tile_dummy1.jpg", img: null },
+{ gfx: "tile_dummy2.jpg", img: null },
+{ gfx: "tile_midbuilding.png", img: null },
+{ gfx: "tile_midbuildingl.png", img: null },
+{ gfx: "tile_midbuildingltop.png", img: null },
+{ gfx: "tile_midbuildingtop.png", img: null },
+{ gfx: "tile_midbuildingtopantenna.png", img: null },
+{ gfx: "tile_midbuildingtopcrenellation.png", img: null },
+{ gfx: "tile_midbuildingtopsatellite.png", img: null },
+{ gfx: "tile_movesdown.png", img: null },
+{ gfx: "tile_movesleft.png", img: null },
+{ gfx: "tile_movesright.png", img: null },
+{ gfx: "tile_movesup.png", img: null },
+{ gfx: "tile_offbuilding.png", img: null },
+{ gfx: "tile_onbuildingl.png", img: null },
+{ gfx: "tile_onbuildingltop.png", img: null },
+{ gfx: "tile_onbuildingtop.png", img: null },
+{ gfx: "tile_psychedelic.png", img: null },
+{ gfx: "tile_suspensionbridge.png", img: null },
+{ gfx: "tile_suspensionbridgel.png", img: null },
+{ gfx: "tile_suspensionbridger.png", img: null },
+{ gfx: "tile_thinbridge.png", img: null },
+{ gfx: "tile_thinbridgel.png", img: null },
+{ gfx: "tile_thinbridger.png", img: null },
+{ gfx: "tile_xwindows.png", img: null },
+{ gfx: "tile_zebra.png", img: null },
+];
+
+function makeElement(what, cssclass, elt) {
+  var e = document.createElement(what);
+  if (cssclass) e.setAttribute('class', cssclass);
+  if (elt) elt.appendChild(e);
+  return e;
+}
+function IMG(cssclass, elt) { return makeElement('IMG', cssclass, elt); }
+function DIV(cssclass, elt) { return makeElement('DIV', cssclass, elt); }
+
+function tilesrc(tile) {
+  return '../assets/' + tile.gfx;
+}
+
+var data = [];
+var WIDTH = 20, HEIGHT = 20;
+var TILESW = 30, TILESH = 30, HEADER = 12;
+/* Load tile images, make data dense with nothings */
+function init() {
+  for (var i = 0; i < TILESW * TILESH; i++)
+    data.push(i % tiles.length);
+  for (var i = 0; i < tiles.length; i++) {
+    if (tiles[i].gfx) {
+      // Just preload.
+      (new Image()).src = tilesrc(tiles[i]);
+    }
+  }
+}
+
+function tileat(x, y) {
+  return data[y * TILESW + x];
+}
+function settileat(x, y, t) {
+  data[y * TILESW + x] = t;
+}
+
+function redraw() {
+  var elt = document.getElementById('map');
+  elt.innerHTML = '';
+  for (var y = 0; y < TILESH; y++) {
+    for (var x = 0; x < TILESW; x++) {
+      var tile = tiles[tileat(x, y)];
+      if (tile.gfx) {
+	var img = IMG('tile', elt);
+	img.src = tilesrc(tile);
+	// Images are y-offset by 12 pixels.
+	img.style.top = y * HEIGHT - HEADER;
+	img.style.left = x * WIDTH;
+      }
+    }
+  }
+}
+
+var cur_tile = 1;
+
+init();
+
+</script>
+</head>
+<body style="font: 12px Verdana,Helvetica,sans-serif" onload="redraw();">
+<div id="map" style="position:absolute; top:0; left:0; width:600px; height: 600px; background:url(../assets/background_nightsky.png)">
+</div>
+<div id="message" style="margin-left: 610px; font-size: 20px">
+Welcome on map editor
+</div>
+<div id="tiles" style="margin-left: 610px; border: 1px solid #CCCCCC">
+</div>
+<br>
+</body>
+</html>
