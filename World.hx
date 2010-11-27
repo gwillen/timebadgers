@@ -1,7 +1,9 @@
 import Utils.Option;
 import Utils;
+import flash.Lib;
 import flash.net.URLRequest;
 import flash.display.Loader;
+import flash.display.Sprite;
 
 class World {
   public static var tile1;
@@ -22,7 +24,7 @@ class World {
     for (row in worldState) {
       for (tile in row) {
         var s = new Sprite();
-        s.content = tile.getImage();
+        s.addChild(tile.getImage());
         s.x = x;
         s.y = y;
         Lib.current.addChild(s);
@@ -53,7 +55,7 @@ class Tile {
   public var image:flash.display.Loader;
   var type:TileType;
   public function new() {}
-  function getImage() {
+  public function getImage() {
     if (Math.random() > 0.5) {
       return World.tile1.content;
     } else {
