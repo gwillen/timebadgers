@@ -10,9 +10,9 @@ class Game {
   static var screenw = 600;
   static var screenh = 600;
 
-  static var tiles : Array<Tile>;
+  static var tiles : Array<World.Tile>;
 
-  static function drawTiles(tiles:Array<Tile>) {
+  static function drawTiles(tiles:Array<World.Tile>) {
     for ( i in 0...30 ) {
       for (j in 0...30 ) {
         var tileno = i+j;
@@ -36,7 +36,7 @@ class Game {
 
     // 1. Read in the level file
     // 2. Parse it into arrays of tiles
-    tiles = new Array<Tile>();
+    tiles = new Array<World.Tile>();
 
     drawTiles(tiles);
     flash.ui.Mouse.cursor.show();

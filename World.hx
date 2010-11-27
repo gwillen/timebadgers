@@ -1,3 +1,5 @@
+class World {}
+
 enum TileType {
   nothing;
   floor;
@@ -9,7 +11,7 @@ enum TileType {
 }
 
 class MovingFloor {
-  var id:int ;  // id of linked butan
+  //var id:int;  // id of linked butan
 }
 
 class Tile {
