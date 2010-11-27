@@ -13,6 +13,25 @@ class World {
     tile2.load(new URLRequest("assets/tile_dummy2.jpg"));
   }
   var worldState: Array<Array<Tile>>;
+
+  static var tileSz = 20; // XXX
+
+  function initDrawWorld() {
+    var x = 0;
+    var y = 0;
+    for (row in worldState) {
+      for (tile in row) {
+        var s = new Sprite();
+        s.content = tile.getImage();
+        s.x = x;
+        s.y = y;
+        Lib.current.addChild(s);
+        x += tileSz;
+      }
+      x = 0;
+      y += tileSz;
+    }
+  }
 }
 
 enum TileType {
