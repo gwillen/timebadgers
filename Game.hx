@@ -4,6 +4,9 @@ import flash.Lib;
 import flash.display.Loader;
 import flash.net.URLRequest;
 
+import flash.events.Event;
+import flash.events.MouseEvent;
+
 class Game {
   static var mc : MovieClip;
   // game parameters
@@ -31,8 +34,13 @@ class Game {
     }
   }
 
+  static function handleclick(event : MouseEvent) {
+      trace("you mousedowned at " + event.localX + " " + event.localY);
+  }
+
   static function main() {
     mc = flash.Lib.current;
+    mc.stage.addEventListener(MouseEvent.MOUSE_DOWN, handleclick );
 
     // 1. Read in the level file
     // 2. Parse it into arrays of tiles
