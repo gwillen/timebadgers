@@ -4,16 +4,44 @@ import flash.Lib;
 import flash.net.URLRequest;
 import flash.display.Loader;
 import flash.display.Sprite;
+import flash.events.Event;
 
 class World {
-  public static var tile1;
-  public static var tile2;
+  public static var tile1:Loader;
+  public static var tile2:Loader;
+  public static var tile3:Loader;
+  public static var tile4:Loader;
+  public static var loaded:Int;
   public static function loadStuff() {
     tile1 = new Loader();
+    tile1.contentLoaderInfo.addEventListener(Event.COMPLETE, completeHandler);
     tile1.load(new URLRequest("assets/tile_dummy1.jpg"));
     tile2 = new Loader();
+    tile2.contentLoaderInfo.addEventListener(Event.COMPLETE, completeHandler);
     tile2.load(new URLRequest("assets/tile_dummy2.jpg"));
+    tile3 = new Loader();
+    tile3.contentLoaderInfo.addEventListener(Event.COMPLETE, completeHandler);
+    tile3.load(new URLRequest("assets/tile_zebra.png"));
+    tile4 = new Loader();
+    tile4.contentLoaderInfo.addEventListener(Event.COMPLETE, completeHandler);
+    tile4.load(new URLRequest("assets/tile_psychedelic.png"));
+    trace("World loading stuff.");
   }
+
+  public static function completeHandler(event : Event) {
+    var loader:Loader = event.target.loader;
+    loaded++;
+
+    if (loaded == 4) {
+      // Now everything is loaded. This is stupid.
+      trace("Going to init tiles.");
+      Game.initTiles();
+      trace("Going to draw tiles.");
+      Game.drawTiles(Game.tiles);
+      trace("Did draw tiles.");
+    }
+  }
+
   var worldState: Array<Array<Tile>>;
 
   static var tileSz = 20; // XXX
@@ -57,9 +85,13 @@ class Tile {
   public function new() {}
   public function getImage() {
     if (Math.random() > 0.5) {
-      return World.tile1.content;
+      return World.tile1;
+    } else if (Math.random() > 0.5) {
+      return World.tile2;
+    } else if (Math.random() > 0.5) {
+      return World.tile3;
     } else {
-      return World.tile2.content;
+      return World.tile4;
     }
   }
 }

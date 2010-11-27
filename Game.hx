@@ -3,6 +3,8 @@ import flash.display.Graphics;
 import flash.Lib;
 import flash.display.Loader;
 import flash.net.URLRequest;
+import flash.display.Sprite;
+import flash.display.Bitmap;
 
 import World.Tile;
 import flash.events.Event;
@@ -19,9 +21,10 @@ class Game {
   static var tilesh = Math.round(screenh/tilesize);
   static var tilesw = Math.round(screenw/tilesize);
 
-  static var tiles : Array<Array<Tile>>;
+  public static var tiles : Array<Tile>;
 
-  static function initTiles () {
+  public static function initTiles () {
+    tiles = new Array<Tile>();
     for (i in 0...tilesh) {
       for (j in 0...tilesw) {
         var tileno = i*tilesw + j;
@@ -32,22 +35,30 @@ class Game {
         }
         
         var thistile = new Tile();
-        var loader = new Loader();
-        loader.load(new URLRequest(img));
-        loader.x = i*tilesize;
-        loader.y = j*tilesize;
-        thistile.image = loader;
-        tiles[i][j] = thistile;
+        //var loader = new Loader();
+        //loader.load(new URLRequest(img));
+        //loader.y = i*tilesize;
+        //loader.x = j*tilesize;
+        //thistile.image = loader;
+        tiles[tileno] = thistile;
       }
     }
   }
 
-  static function drawTiles(tiles:Array<Array<Tile>>) {
+  public static function drawTiles(tiles:Array<Tile>) {
     // XXX unhardcode
+    trace("Drawing tiles.");
     for ( i in 0...30 ) {
       for (j in 0...30 ) {
-        var thistile:Tile = tiles[i][j];
-        Lib.current.addChild(thistile.image);
+        //trace("About to draw i = " + i + " j = " + j);
+        var thistile:Tile = tiles[i*30+j];
+        var tileb:Bitmap = cast thistile.getImage().content;
+        var b = new Bitmap(tileb.bitmapData);
+        var s = new Sprite();
+        s.y = i * tilesize;
+        s.x = j * tilesize;
+        s.addChild(b);
+        Lib.current.addChild(s);
       }
     }
   }
@@ -63,15 +74,27 @@ class Game {
   } 
 
   static function main() {
-    mc = flash.Lib.current;
-    mc.stage.addEventListener(MouseEvent.MOUSE_DOWN, handleclick );
-    mc.stage.addEventListener(KeyboardEvent.KEY_DOWN, handlekeydown );
+    try {
+      mc = flash.Lib.current;
+      mc.stage.addEventListener(MouseEvent.MOUSE_DOWN, handleclick );
+      mc.stage.addEventListener(KeyboardEvent.KEY_DOWN, handlekeydown );
 
-    // 1. Read in the level file
-    // 2. Parse it into arrays of tiles
-    initTiles();
+      //flash.Lib.setErrorHandler(Utils.myHandler);
 
-    drawTiles(tiles);
-//    flash.ui.Mouse.cursor.show();
+      // 1. Read in the level file
+      // 2. Parse it into arrays of tiles
+      World.loadStuff();
+      //World.initDrawWorld();
+
+      // Not actually gonna draw tiles here. Right now we are drawing them from
+      // loadStuff. Ugh.
+      //initTiles();
+      //drawTiles(tiles);
+  //    flash.ui.Mouse.cursor.show();
+     } catch ( s : String ) {
+       trace("Exception (String): " + s);
+     } catch ( unknown : Dynamic ) {
+       trace("Exception (Dynamic): " + Std.string(unknown));
+     }
    }
 }

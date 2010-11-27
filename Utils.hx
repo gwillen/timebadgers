@@ -7,6 +7,20 @@ class Utils {
     return rv;
   }
 
+/*
+  public static function stackTrace (as : Array<String>) : String {
+    var s = new String();
+    for (i in as) {
+      s.append(i);
+    }
+    return s;
+  }
+
+  public static function myHandler(msg : String, stack : Array<String>) {
+    trace("We done fucked up: " + msg);
+    trace(stackTrace(stack));
+  }
+  */
   //public static function dump(o : Dynamic) {
   //  for (i in o) {
   //  }
