@@ -5,6 +5,8 @@ import flash.display.Loader;
 import flash.net.URLRequest;
 
 import World.Tile;
+import flash.events.Event;
+import flash.events.MouseEvent;
 
 class Game {
   static var mc : MovieClip;
@@ -49,13 +51,19 @@ class Game {
     }
   }
 
+  static function handleclick(event : MouseEvent) {
+      trace("you mousedowned at " + event.localX + " " + event.localY);
+  }
+
   static function main() {
     mc = flash.Lib.current;
+    mc.stage.addEventListener(MouseEvent.MOUSE_DOWN, handleclick );
 
     // 1. Read in the level file
     // 2. Parse it into arrays of tiles
     initTiles();
 
     drawTiles(tiles);
-  }
+//    flash.ui.Mouse.cursor.show();
+   }
 }
