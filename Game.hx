@@ -52,6 +52,8 @@ class Game {
     }
   }
 
+
+
   static function handleclick(event : MouseEvent) {
       trace("you mousedowned at " + event.localX + " " + event.localY);
   }
