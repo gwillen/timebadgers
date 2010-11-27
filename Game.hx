@@ -1,6 +1,10 @@
 import flash.display.MovieClip;
 import flash.display.Graphics;
 
+import flash.Lib;
+import flash.display.Loader;
+import flash.net.URLRequest;
+
 enum TileType {
   nothing;
   floor;
@@ -21,8 +25,23 @@ class Game {
 
   static var tiles : Array<Tile>;
 
-  static function drawTiles() {
+  static function drawTiles(tiles:Array<Tile>) {
+    for ( i in 0...30 ) {
+      for (j in 0...30 ) {
+        var tileno = i+j;
+        var img:String;
+        switch(tileno % 2) {
+          case 0 : img =  'graphics/dummytile1.jpg';
+          default : img = 'graphics/dummytile2.jpg';
+        }
+        var loader = new Loader();
 
+        loader.load(new URLRequest(img));
+        loader.x = i*20;
+        loader.y = j*20;
+        Lib.current.addChild(loader);
+      }
+    }
   }
 
   static function main() {
@@ -32,21 +51,6 @@ class Game {
     // 2. Parse it into arrays of tiles
     tiles = new Array<Tile>();
 
-    // 3. Draw the tiles
-    for ( i in 0...30 ) {
-      for (j in 0...30 ) {
-        var tileno = 30*i + j;
-        var color = 0xFF0000;
-        switch(tileno % 3) {
-          case 1 : color =  0xFFFFFF;
-          case 2 : color =  0x000000;
-        }
-        mc.graphics.beginFill(color);
-        mc.graphics.moveTo(i*20,j*20);
-        mc.graphics.lineTo(i*20,j*20+20);
-        mc.graphics.lineTo(i*20+20,j*20);
-        mc.graphics.endFill();
-      }
-    }
+    drawTiles(tiles);
   }
 }
