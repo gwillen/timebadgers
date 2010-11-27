@@ -1,3 +1,12 @@
+import flash.events.Event;
+import flash.events.MouseEvent;
+import flash.display.Sprite;
+import flash.display.BitmapData;
+import flash.display.Bitmap;
+import flash.geom.Rectangle;
+import flash.geom.Point;
+
+
 typedef Coor = {
     var x : Int;
     var y : Int;
@@ -9,7 +18,7 @@ typedef Jmp = {
 } 
 
 
-class Jump {
+class Jump extends Sprite {
 
 /*
 
@@ -17,13 +26,9 @@ upone = jmp (0, -1) []
 uptwo = jmp (0,-2) [(0,-1)]
 upthree = jmp (0,-3) [(0,-1), (0,-2)]
 
-
 rightupone = jmp (1,-1) [(0,-1)]
 rightuptwo  = jmp (1,-2) [(0,-1), (0,-2)]
 rightupthree = jmp (1,-3) [(0,-1), (0,-2), (0,-3)]
-
-
-
 
 */
 
@@ -125,6 +130,16 @@ rightupthree = jmp (1,-3) [(0,-1), (0,-2), (0,-3)]
 
 
 
+
+
+  function new(inBitmap:BitmapData){
+    super(); 
+    stage.addEventListener(MouseEvent.MOUSE_DOWN, handleclick );
+    trace("HEERE");
+  }
+
+
+
   static function main() {
     trace ( stringofjmp(leftjmps[6] ));
 
@@ -137,5 +152,8 @@ rightupthree = jmp (1,-3) [(0,-1), (0,-2), (0,-3)]
     mc.graphics.lineTo(100,100);
     mc.graphics.lineTo(50,100);
     mc.graphics.endFill();
+
+    mc.stage.addEventListener(MouseEvent.MOUSE_DOWN, handleclick );
+
   }
 }
