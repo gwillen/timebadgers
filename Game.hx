@@ -1,21 +1,8 @@
 import flash.display.MovieClip;
 import flash.display.Graphics;
-
 import flash.Lib;
 import flash.display.Loader;
 import flash.net.URLRequest;
-
-enum TileType {
-  nothing;
-  floor;
-  man;
-  turtal;
-}
-
-class Tile {
-  static var size = 20; // width and height
-  var type:TileType;
-}
 
 class Game {
   static var mc : MovieClip;
