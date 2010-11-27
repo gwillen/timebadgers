@@ -49,8 +49,10 @@ class MovingFloor {
 }
 
 class Tile {
-  static var size = 20; // width and height
+  public static var size:Int = 20; // width and height
+  public var image:flash.display.Loader;
   var type:TileType;
+  public function new() {}
   function getImage() {
     if (Math.random() > 0.5) {
       return World.tile1.content;
