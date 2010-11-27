@@ -49,9 +49,34 @@ rightupthree = jmp (1,-3) [(0,-1), (0,-2), (0,-3)]
   static var rrru  = readjmp([ {x:3,y:0}, {x:1,y:-1}, {x:2,y:-1}]);
 
   static var rd = readjmp([{x:1,y:1},{x:1,y:0}]);
-  static var rdd = readjmp([{x:1,y:2},{x:1,y:0},{x:1,y:1}]);
-  static var rddd = readjmp([{x:1,y:3},{x:1,y:0},{x:1,y:1},{x:1,y:2}]);
+  static var rdd = readjmp([{x:1,y:2},
+                            {x:1,y:0},
+                            {x:1,y:1}]);
+  static var rddd = readjmp([{x:1,y:3},
+                             {x:1,y:0},
+                             {x:1,y:1},
+                             {x:1,y:2}]);
   static var rdddd = readjmp([{x:1,y:4},{x:1,y:0},{x:1,y:1},{x:1,y:2},{x:1,y:3}]);
+
+  static var rrd = readjmp([{x:2,y:1},
+                            {x:1,y:0}]);
+  static var rrdd = readjmp([{x:2,y:2},
+                             {x:1,y:0},
+                             {x:2,y:1}]);
+  static var rrddd = readjmp([{x:2,y:3},
+                              {x:1,y:0},
+                              {x:2,y:1},
+                              {x:2,y:2}]);
+
+  static var rrrd = readjmp([{x:3,y:1},
+                             {x:1,y:0},
+                             {x:2,y:0}]);
+
+  static var rrrdd = readjmp([{x:3,y:2},
+                              {x:1,y:0},
+                              {x:2,y:0},
+                              {x:3,y:1}]);
+                             
 
   static var arr: Array<Int>  = [1,2,3,4,5,6];
 
