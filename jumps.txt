@@ -61,6 +61,14 @@ ooooooo
 
 what is a jump?
 
+This is how the world is indexed:
+(0,0)  (1,0) (2,0) ...
+(0,1)  (1,1) (2,1) ...
+etc
+
+so jumping up is a negative y displacement.
+
+
 a final displacement, and a list of tiles on the way there.
 
 data jump = 
@@ -68,7 +76,17 @@ data jump =
        path : (int, int) list
      }
 
-upone = jmp (-1, 
+upone = jmp (0, -1) []
+uptwo = jmp (0,-2) [(0,-1)]
+upthree = jmp (0,-3) [(0,-1), (0,-2)]
+
+
+rightupone = jmp (1,-1) [(0,-1)]
+rightuptwo  = jmp (1,-2) [(0,-1), (0,-2)]
+rightupthree = jmp (1,-3) [(0,-1), (0,-2), (0,-3)]
+
+overtwo = jmp (2,0) [(1,0)]
+overthree = jmp (3,0) [(1,0), (2,0)]
 
 
 
