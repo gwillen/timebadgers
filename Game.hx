@@ -7,6 +7,7 @@ import flash.net.URLRequest;
 import World.Tile;
 import flash.events.Event;
 import flash.events.MouseEvent;
+import flash.events.KeyboardEvent;
 
 class Game {
   static var mc : MovieClip;
@@ -55,9 +56,14 @@ class Game {
       trace("you mousedowned at " + event.localX + " " + event.localY);
   }
 
+  static function handlekeydown(event : KeyboardEvent) {
+      trace("you pushed this button: " + event); 
+  } 
+
   static function main() {
     mc = flash.Lib.current;
     mc.stage.addEventListener(MouseEvent.MOUSE_DOWN, handleclick );
+    mc.stage.addEventListener(KeyboardEvent.KEY_DOWN, handlekeydown );
 
     // 1. Read in the level file
     // 2. Parse it into arrays of tiles
