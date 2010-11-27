@@ -5,6 +5,8 @@ import flash.net.URLRequest;
 import flash.display.Loader;
 import flash.display.Sprite;
 
+typedef World_t = Array<Array<Tile>>;
+
 class World {
   public static var tile1;
   public static var tile2;
@@ -14,7 +16,7 @@ class World {
     tile2 = new Loader();
     tile2.load(new URLRequest("assets/tile_dummy2.jpg"));
   }
-  var worldState: Array<Array<Tile>>;
+  var worldState: World_t;
 
   static var tileSz = 20; // XXX
 
@@ -34,6 +36,16 @@ class World {
       y += tileSz;
     }
   }
+
+/*
+  static function isBlocked(w: World, x:Int, y: Int) {
+    return switch (w[x][y] ) {   
+      case floor: true;
+      otherwise : false;
+    }
+  }
+*/
+
 }
 
 enum TileType {

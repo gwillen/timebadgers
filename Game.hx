@@ -6,6 +6,7 @@ import flash.Lib;
 import flash.display.Loader;
 import flash.net.URLRequest;
 
+import World.World;
 import World.Tile;
 import flash.events.Event;
 import flash.events.MouseEvent;
