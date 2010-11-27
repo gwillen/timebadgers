@@ -32,11 +32,19 @@ overthree = jmp (3,0) [(1,0), (2,0)]
   static var uptwo : Jmp = { dest : {x:0, y:-2}, path : [ {x:0,y:-1}]  } ;
   static var upthree : Jmp = { dest : {x:0, y:-3}, path : [{x:0,y:-1},{x:0,y:-2}] } ;
 
+  static var rightupone : Jmp = { dest: {x:1,y:-1}, path : [{x:0,y:-1}]};
+  static var rightuptwo  : Jmp = {dest : {x:1,y:-2}, path : [{x:0,y:-1}, {x:0,y:-2}]};
+  
+
   static var arr: Array<Int>  = [1,2,3,4,5,6];
+
+  static function printjmp(j : Jmp) {
+    trace ("dest = " + j.dest.x + ", " + j.dest.y);
+  } 
 
 
   static function main() {
-
+    printjmp(upthree);
 
     trace ("Hello world!" + arr + "   " + upone);
     var mc:flash.display.MovieClip = flash.Lib.current;
