@@ -162,12 +162,10 @@ class Tile {
   public var style:TileStyle;
   public function getImage() {
     var styleNum : Int = Math.floor(Math.random() * World.tileStyles.length);
-    //return World.tileStyles[2].frames[0].buf;
     try {
       return World.tileStyles[styleNum].frames[0].buf;
     } catch ( d : Dynamic ) {
-      trace("Failed number was " + styleNum);
-      //trace("Failed frame was " + World.tileStyles[styleNum].frames[0].filename);
+      trace("Failed frame was " + World.tileStyles[styleNum].frames[0].filename);
       return World.tileStyles[0].frames[0].buf;
     }
   }

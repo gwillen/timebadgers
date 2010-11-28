@@ -17,6 +17,9 @@ class LoadStuff {
     var counter : Int = 0;
     trace("processing tilemap");
     for (line in lines) {
+      if (line == "") {
+        break;
+      }
       var style = new TileStyle();
       style.frames = new Array<TileFrame>();
 
