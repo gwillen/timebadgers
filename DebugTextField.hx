@@ -22,6 +22,12 @@ class DebugTextField extends TextField{
 
    public function trace(s : String) {
      appendText(s);
+
+
+     while( numLines > 45){
+       var t = text.substr(getLineLength(0));
+       text = t;
+      }
    }
 
 }

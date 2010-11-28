@@ -35,7 +35,7 @@ class LoadStuff {
           var bitmap : Bitmap = cast l.content;
           frame.buf = bitmap.bitmapData;
           Game.debugtf.trace("loaded buf");
-          Game.debugtf.trace("" + frame.buf);
+          Game.debugtf.trace("" + frame.buf + "\n");
         });
       }
       tilestyles[counter] = style;
