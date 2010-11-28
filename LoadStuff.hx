@@ -7,6 +7,27 @@ import flash.display.Bitmap;
 import World;
 
 class LoadStuff {
+  public static function loadLevel(filename : String, level : Array<Tile>) {
+    filename = "maps/" + filename;
+    loadTextFileAndCall(filename, function(x) { processLevel(x, level); });
+  }
+
+  public static function processLevel(levelfile : String, level : Array<Tile>) {
+    var tilecodes : Array<String> = levelfile.split("\n").join(" ").split(" ");
+    if (tilecodes[tilecodes.length-1] == "") {
+      // newline at end of file
+      tilecodes.pop();
+    }
+    trace("a");
+    var tilenums : Array<Int> = Utils.map(Utils.parseHex, tilecodes);
+    for (i in tilenums) {
+      var t = new Tile();
+      t.style = World.tileStyles[i];
+      level.push(t);
+    }
+    trace("a");
+  }
+
   public static function loadTileMap(styles : Array<TileStyle>) {
     loadTextFileAndCall("TILEMAP", function (x) { processTileMap(x, styles); });
   }
@@ -14,7 +35,6 @@ class LoadStuff {
   public static function processTileMap(tilemap : String, tilestyles : Array<TileStyle>) {
     // Is there a \r problem here?
     var lines : Array<String> = tilemap.split("\n");
-    var counter : Int = 0;
     trace("processing tilemap");
     for (line in lines) {
       if (line == "") {
@@ -24,8 +44,9 @@ class LoadStuff {
       style.frames = new Array<TileFrame>();
 
       var words : Array<String> = line.split(" ");
-      var idstr = words.shift();
+      var id = Utils.parseHex(words.shift());
       var bitsstr = words.shift();
+      // XXX need to use the bitstr
       while (words.length > 0) {
         var filename = words.shift();
         var delay = words.shift();
@@ -33,16 +54,12 @@ class LoadStuff {
         style.frames.push(frame);
         frame.delay = Std.parseInt(delay);
         frame.filename = filename;
-        trace("filename is |" + filename + "|");
         loadImageAndCall(filename, function (l) {
           var bitmap : Bitmap = cast l.content;
           frame.buf = bitmap.bitmapData;
-          trace("loaded buf");
-          trace(frame.buf);
         });
       }
-      tilestyles[counter] = style;
-      counter++;
+      tilestyles[id] = style;
     }
   }
 
@@ -98,10 +115,7 @@ class LoadStuff {
   public static function loadImageAndCall(filename : String, f) {
     var loader = new Loader();
     filename = "assets/" + filename;
-    trace("Beginning load of " + filename);
     loader.contentLoaderInfo.addEventListener(Event.COMPLETE, function(e : Event) {
-      trace("done load of " + filename);
-      trace("content is " + e.target.loader.content);
       f(e.target.loader);
     });
     loader.load(new URLRequest(filename));
