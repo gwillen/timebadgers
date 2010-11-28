@@ -96,6 +96,8 @@ class World {
 
   // Must work on invalid coords; return true.
   public static function isBlocked(w: World_t, x:Int, y:Int) :Bool {
+   if (x < 0 || x >= tilesw || y < 0 || y >= tilesh) { return true;}
+    else    
     return switch (getTile(x, y).type ) {   
       case TileType.floor: true;
       default : false;
@@ -104,6 +106,8 @@ class World {
 
   // Must work on invalid coords; return true;
   public static function canStandOn(w: World_t, x:Int, y:Int) :Bool {
+   if (x < 0 || x >= tilesw || y < 0 || y >= tilesh) { return false;}
+    else    
     return switch (getTile(x, y).type ) {   
       case TileType.floor: true; 
       //XXX also bridges
