@@ -5,6 +5,9 @@ import flash.events.Event;
 import Utils;
 
 class LoadStuff {
+  public static function loadTileMap() {
+  }
+
   static var count : Int;
   static var batchCompleteHandler;
  

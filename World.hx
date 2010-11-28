@@ -5,6 +5,7 @@ import flash.display.Loader;
 import flash.display.Sprite;
 import flash.events.Event;
 import flash.display.Bitmap;
+import flash.display.BitmapData;
 
 typedef World_t = Array<Tile>;
 
@@ -19,10 +20,9 @@ class World {
   public static function loadStuff() {
     LoadStuff.loadTextFileAndCall("TILEMAP", function(x) { trace(x); });
 
-    var bg = new Loader();
-    bg.contentLoaderInfo.addEventListener(Event.COMPLETE, completeHandler);
-    bg.load(new URLRequest("assets/background_nightsky.png"));
-    Game.rootmc.addChild(bg);
+    LoadStuff.loadImageAndCall("assets/background_nightsky.png", function(l) {
+      Game.rootmc.addChild(l);
+    });
 
     tile = new Array<Ref<Loader>>();
     for (i in 0...4) {
@@ -134,10 +134,22 @@ class MovingFloor {
   var id:Option<Int>;  // id of linked butan
 }
 
+class TileFrame {
+  public var buf : BitmapData;
+  public var delay : Int;
+}
+
+class TileStyle {
+  public var frames : Array<TileFrame>;
+  public var standon : Bool;
+  public var solid : Bool;
+}
+
 class Tile {
   public static var size:Int = 20; // width and height
   public var image:flash.display.Loader;
   public var type:TileType;
+  public var style:TileStyle;
   public function new() {}
   public function getImage() {
     if (Math.random() > 0.5) {
