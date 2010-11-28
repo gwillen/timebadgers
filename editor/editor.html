@@ -109,7 +109,7 @@ function onenterframe() {
       // be cached.
       for (var i = 0; i < frames.length; i++)
 	period += frames[i].delay;
-      var localframe = framenum % period;
+      var localframe = (framenum + (document.images[o].localoffset || 0)) % period;
       var newsrc;
       for (var i = 0; i < frames.length; i++) {
 	if (localframe < frames[i].delay) {
@@ -138,6 +138,7 @@ function init() {
   // Parse TILEMAP.
   var content = document.getElementById('tilemap').value;
   var lines = content.split("\n");
+
   for (var i = 0; i < lines.length; i++) {
     var parts = lines[i].split(" ");
     if (parts.length >= 4 && (parts.length % 2 == 0)) {
@@ -145,6 +146,7 @@ function init() {
       // n.b. ignored.
       var bits = parts[1];
       var frames = [];
+
       for (var j = 2; j < parts.length; j += 2) {
 	if (parts[j] != "null") {
 	  var img = parts[j];
@@ -157,6 +159,7 @@ function init() {
       var tile = { num: num, bits: bits, frames: frames };
       tilemap[num] = tile;
       tiles.push(tile);
+
     } else if (parts.length != 0 && !(parts.length == 1 && parts[0].length == 0)) {
       alert('Line with wrong number of parts: ' + lines[i]);
       return;
@@ -211,6 +214,7 @@ function redrawmap() {
 	var img = IMG('tile', elt);
 	img.src = anyimage(tile);
 	img.frames = tile.frames;
+	img.localoffset = ((x * 1131) % 971) + ((y * 4571) % 37);
 	// Images are y-offset by 12 pixels.
 	img.style.top = y * HEIGHT - HEADER;
 	img.style.left = x * WIDTH;
@@ -371,9 +375,9 @@ Welcome on map editor
 0010 1100000000000000 tile_onbuildingltop.png 1
 0011 1100000000000000 tile_onbuildingtop.png 1
 0012 1100000000000000 tile_psychedelic.png 1
-0013 1000000000000000 tile_suspensionbridge.png 5 tile_suspensionbridge2.png 5
-0014 1000000000000000 tile_suspensionbridgel.png 4 tile_suspensionbridgel2.png 5
-0015 1000000000000000 tile_suspensionbridger.png 6 tile_suspensionbridger2.png 5
+0013 1000000000000000 tile_suspensionbridge.png 2 tile_suspensionbridge2.png 8
+0014 1000000000000000 tile_suspensionbridgel.png 2 tile_suspensionbridgel2.png 9
+0015 1000000000000000 tile_suspensionbridger.png 2 tile_suspensionbridger3.png 7 tile_suspensionbridger2.png 2 tile_suspensionbridger3.png 7
 0016 1000000000000000 tile_thinbridge.png 1
 0017 1000000000000000 tile_thinbridgel.png 1
 0018 1000000000000000 tile_thinbridger.png 1
