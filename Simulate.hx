@@ -12,8 +12,14 @@ class Simulate {
  */
 
 
- static function validjumps(w: World, x: Int, y: Int) : Array< Coor>{
-        return [];
+ static function validjumps(w0: World_t, w1: World_t, x: Int, y: Int) : Array< Coor>{
+    var r: Array<Coor>  = new Array<Coor>();
+     for(j in Jump.jmps){
+           if(Jump.canJump(j, w0, w1, x,y)){
+               r.push({x:x, y:y});
+         }
+     }
+   return r;
  }
 
 }

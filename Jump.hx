@@ -100,7 +100,7 @@ class Jump extends Sprite {
   static var leftjmps:Array<Jmp> = arrmap(rightjmps, reflectjmp);
                        
 
-  static var jmps = rightjmps.concat(leftjmps).concat([u,uu,uuu]);
+  public static var jmps = rightjmps.concat(leftjmps).concat([u,uu,uuu]);
 
 
   static function stringofcoor(c : Coor){
@@ -118,7 +118,7 @@ class Jump extends Sprite {
 
 
 
-  static function canjump(j:Jmp, w0: World_t, w1: World_t, x: Int, y: Int): Bool {
+  public static function canJump(j:Jmp, w0: World_t, w1: World_t, x: Int, y: Int): Bool {
        var r: Bool = true;
         if(! World.canStandOn(w1, j.dest.x + x, j.dest.y + y)){
              r = false;
