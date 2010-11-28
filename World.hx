@@ -18,9 +18,11 @@ class World {
   public static var tile:Array<Ref<Loader>>;
 
   public static function loadStuff() {
-    LoadStuff.loadTextFileAndCall("TILEMAP", function(x) { trace(x); });
+    tileStyles = new Array<TileStyle>();
+    // Danger: This call is async.
+    LoadStuff.loadTileMap(tileStyles);
 
-    LoadStuff.loadImageAndCall("assets/background_nightsky.png", function(l) {
+    LoadStuff.loadImageAndCall("background_nightsky.png", function(l) {
       Game.rootmc.addChildAt(l, 0);
     });
 
@@ -33,17 +35,21 @@ class World {
     // really necessary to do this in this order, since all our logic is in
     // frameDidLoad or whatever, which won't get called till we return from
     // main (which is what's calling this to do the loading.)
+    /*
     LoadStuff.startBatchLoad(initTiles);
     LoadStuff.batchLoadImage("assets/tile_xwindows.png", tile[0]);
     LoadStuff.batchLoadImage("assets/tile_suspensionbridge.png", tile[1]);
     LoadStuff.batchLoadImage("assets/tile_zebra.png", tile[2]);
     LoadStuff.batchLoadImage("assets/tile_psychedelic.png", tile[3]);
     LoadStuff.endBatchLoad();
+    */
+    initTiles();
 
     trace("World loading stuff.");
   }
 
   static var worldState: World_t;
+  public static var tileStyles : Array<TileStyle>;
 
   public static function drawTheTiles() {
     drawTiles(worldState);
@@ -77,8 +83,8 @@ class World {
     for ( y in 0...tilesh ) {
       for (x in 0...tilesw ) {
         var thistile:Tile = getTile(x, y);
-        var tileb:Bitmap = cast thistile.getImage().content;
-        var b = new Bitmap(tileb.bitmapData);
+        var tileb = thistile.getImage();
+        var b = new Bitmap(tileb);
         var s = new Sprite();
         s.x = x * tilesize;
         s.y = y * tilesize - 12; // 12-pixel overlap zone
@@ -135,31 +141,34 @@ class MovingFloor {
 }
 
 class TileFrame {
+  public function new() {}
+  public var filename : String;
   public var buf : BitmapData;
   public var delay : Int;
 }
 
 class TileStyle {
+  public function new() {}
   public var frames : Array<TileFrame>;
   public var standon : Bool;
   public var solid : Bool;
 }
 
 class Tile {
+  public function new() {}
   public static var size:Int = 20; // width and height
   public var image:flash.display.Loader;
   public var type:TileType;
   public var style:TileStyle;
-  public function new() {}
   public function getImage() {
-    if (Math.random() > 0.5) {
-      return World.tile[0].val;
-    } else if (Math.random() > 0.5) {
-      return World.tile[1].val;
-    } else if (Math.random() > 0.5) {
-      return World.tile[2].val;
-    } else {
-      return World.tile[3].val;
+    var styleNum : Int = Math.floor(Math.random() * World.tileStyles.length);
+    //return World.tileStyles[2].frames[0].buf;
+    try {
+      return World.tileStyles[styleNum].frames[0].buf;
+    } catch ( d : Dynamic ) {
+      trace("Failed number was " + styleNum);
+      //trace("Failed frame was " + World.tileStyles[styleNum].frames[0].filename);
+      return World.tileStyles[0].frames[0].buf;
     }
   }
 }
