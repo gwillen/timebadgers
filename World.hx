@@ -64,67 +64,47 @@ class World {
 
   public static function initTiles () {
     worldState = new Array<Tile>();
-    for (i in 0...tilesh) {
-      for (j in 0...tilesw) {
-        var tileno = i*tilesw + j;
-        
-        var thistile = new Tile();
-        worldState[tileno] = thistile;
+    for (y in 0...tilesh) {
+      for (x in 0...tilesw) {
+        setTile(x, y, new Tile()); 
       }
     }
   }
 
   public static function drawTiles(tiles:Array<Tile>) {
-    // XXX unhardcode
-    trace("Drawing tiles.");
-    for ( i in 0...30 ) {
-      for (j in 0...30 ) {
-        //trace("About to draw i = " + i + " j = " + j);
-        var thistile:Tile = tiles[i*30+j];
+    for ( y in 0...tilesh ) {
+      for (x in 0...tilesw ) {
+        var thistile:Tile = getTile(x, y);
         var tileb:Bitmap = cast thistile.getImage().content;
         var b = new Bitmap(tileb.bitmapData);
         var s = new Sprite();
-        s.y = i * tilesize - 12; // 12-pixel overlap zone
-        s.x = j * tilesize;
+        s.x = x * tilesize;
+        s.y = y * tilesize - 12; // 12-pixel overlap zone
         s.addChild(b);
         Game.mainmc.addChild(s);
       }
     }
   }
 
-
-  static var tileSz = 20; // XXX
-
-/*
-  function initDrawWorld() {
-    var x = 0;
-    var y = 0;
-    for (row in worldState) {
-      for (tile in row) {
-        var s = new Sprite();
-        s.addChild(tile.getImage());
-        s.x = x;
-        s.y = y - 12;
-        Lib.current.addChild(s);
-        x += tileSz;
-      }
-      x = 0;
-      y += tileSz;
-    }
+  public static function getTile(x:Int, y:Int) : Tile {
+    return worldState[y*tilesw + x];
   }
 
-  */
+  public static function setTile(x:Int, y:Int, t:Tile) {
+    worldState[y*tilesw + x] = t;
+  }
 
-
+  // Must work on invalid coords; return true.
   public static function isBlocked(w: World_t, x:Int, y:Int) :Bool {
-    return switch (w[x][y].type ) {   
+    return switch (getTile(x, y).type ) {   
       case TileType.floor: true;
       default : false;
     }
   }
 
+  // Must work on invalid coords; return true;
   public static function canStandOn(w: World_t, x:Int, y:Int) :Bool {
-    return switch (w[x][y].type ) {   
+    return switch (getTile(x, y).type ) {   
       case TileType.floor: true; 
       //XXX also bridges
       default : false;
