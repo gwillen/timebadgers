@@ -7,6 +7,10 @@ class Utils {
     return rv;
   }
 
+  public static function halt() {
+    while(true) {}
+  }
+
 /*
   public static function stackTrace (as : Array<String>) : String {
     var s = new String();
