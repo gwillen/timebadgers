@@ -93,8 +93,6 @@ class World {
   }
 
 
-
-
   static var tileSz = 20; // XXX
 
 /*
@@ -115,19 +113,23 @@ class World {
     }
   }
 
-
-
-
   */
-/*
-  static function isBlocked(w: World, x:Int, y: Int) {
-    return switch (w[x][y] ) {   
-      case floor: true;
-      otherwise : false;
+
+
+  public static function isBlocked(w: World_t, x:Int, y:Int) :Bool {
+    return switch (w[x][y].type ) {   
+      case TileType.floor: true;
+      default : false;
     }
   }
-*/
 
+  public static function canStandOn(w: World_t, x:Int, y:Int) :Bool {
+    return switch (w[x][y].type ) {   
+      case TileType.floor: true; 
+      //XXX also bridges
+      default : false;
+    }
+  }
 
 
 }
@@ -149,7 +151,7 @@ class MovingFloor {
 class Tile {
   public static var size:Int = 20; // width and height
   public var image:flash.display.Loader;
-  var type:TileType;
+  public var type:TileType;
   public function new() {}
   public function getImage() {
     if (Math.random() > 0.5) {
