@@ -44,7 +44,7 @@ class World {
     */
     //initTiles();
 
-    trace("World loading stuff.");
+    Game.debugtf.trace("World loading stuff.\n");
   }
 
   static var worldState: World_t;
@@ -70,7 +70,7 @@ class World {
 
 /*
   public static function initTiles () {
-    trace("initTiles");
+    Game.debugtf.trace("initTiles");
     worldState = new Array<Tile>();
     for (y in 0...tilesh) {
       for (x in 0...tilesw) {
@@ -168,7 +168,8 @@ class Tile {
     try {
       return World.tileStyles[styleNum].frames[0].buf;
     } catch ( d : Dynamic ) {
-      trace("Failed frame was " + World.tileStyles[styleNum].frames[0].filename);
+      Game.debugtf.trace("Failed number was " + styleNum);
+      //Game.debugtf.trace("Failed frame was " + World.tileStyles[styleNum].frames[0].filename);
       return World.tileStyles[0].frames[0].buf;
     }
     */

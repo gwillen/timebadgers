@@ -35,7 +35,7 @@ class LoadStuff {
   public static function processTileMap(tilemap : String, tilestyles : Array<TileStyle>) {
     // Is there a \r problem here?
     var lines : Array<String> = tilemap.split("\n");
-    trace("processing tilemap");
+    Game.debugtf.trace("processing tilemap");
     for (line in lines) {
       if (line == "") {
         break;
@@ -84,7 +84,7 @@ class LoadStuff {
 
   public static function batchOneLoadedHandler() {
     count--;
-    trace("Loader finished one; count is now " + count);
+    Game.debugtf.trace("Loader finished one; count is now " + count);
     if (count == 0) {
       batchCompleteHandler();
     }
