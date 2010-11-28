@@ -1,12 +1,12 @@
 import Utils.Option;
 import Utils;
-import flash.Lib;
 import flash.net.URLRequest;
 import flash.display.Loader;
 import flash.display.Sprite;
 import flash.events.Event;
+import flash.display.Bitmap;
 
-typedef World_t = Array<Array<Tile>>;
+typedef World_t = Array<Tile>;
 
 class World {
   public static var tile1:Loader;
@@ -30,7 +30,7 @@ class World {
     trace("World loading stuff.");
   }
 
-  var worldState: World_t;
+  static var worldState: World_t;
 
   public static function completeHandler(event : Event) {
     var loader:Loader = event.target.loader;
@@ -39,10 +39,56 @@ class World {
     if (loaded == 4) {
       // Now everything is loaded. This is stupid.
       trace("Going to init tiles.");
-      Game.initTiles();
-      trace("Going to draw tiles.");
-      Game.drawTiles(Game.tiles);
-      trace("Did draw tiles.");
+      initTiles();
+      //haxe.Timer.delay(drawTheTiles, 0);
+    }
+  }
+
+  public static function drawTheTiles() {
+    drawTiles(worldState);
+  }
+
+  public static function clearTheTiles() {
+    while(Game.mainmc.numChildren > 0) {
+      Game.mainmc.removeChildAt(0);
+    }
+  }
+
+  // game parameters
+  static var screenw:Int = 600;
+  static var screenh:Int = 600;
+  
+  static var tilesize:Int = Tile.size;
+  static var tilesh = Math.round(screenh/tilesize);
+  static var tilesw = Math.round(screenw/tilesize);
+
+  public static function initTiles () {
+    worldState = new Array<Tile>();
+    for (i in 0...tilesh) {
+      for (j in 0...tilesw) {
+        var tileno = i*tilesw + j;
+        
+        var thistile = new Tile();
+        worldState[tileno] = thistile;
+      }
+    }
+  }
+
+  public static function drawTiles(tiles:Array<Tile>) {
+    // XXX unhardcode
+    trace("Drawing tiles.");
+    for ( i in 0...30 ) {
+      for (j in 0...30 ) {
+        //trace("About to draw i = " + i + " j = " + j);
+        var thistile:Tile = tiles[i*30+j];
+        var tileb:Bitmap = cast thistile.getImage().content;
+        var b = new Bitmap(tileb.bitmapData);
+        var s = new Sprite();
+        s.y = i * tilesize - 12; // 12-pixel overlap zone
+        s.x = j * tilesize;
+        s.addChild(b);
+        Game.mainmc.addChild(s);
+      }
     }
   }
 
@@ -70,14 +116,14 @@ class World {
   */
 
 
-  static function isBlocked(w: World_t, x:Int, y:Int) :Bool {
+  public static function isBlocked(w: World_t, x:Int, y:Int) :Bool {
     return switch (w[x][y].type ) {   
       case TileType.floor: true;
       default : false;
     }
   }
 
-  static function canStandOn(w: World_t, x:Int, y:Int) :Bool {
+  public static function canStandOn(w: World_t, x:Int, y:Int) :Bool {
     return switch (w[x][y].type ) {   
       case TileType.floor: true; 
       //XXX also bridges
