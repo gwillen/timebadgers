@@ -11,6 +11,16 @@ class Utils {
     while(true) {}
   }
 
+  public static function parseBool (digit : String) : Bool {
+    switch(digit) {
+      case "0":
+        return false;
+      case "1":
+        return true;
+    }
+    throw("bad bool");
+  }
+
   static function parseHexDigit (digit : String) : Int {
     switch(digit) {
       case "0":
