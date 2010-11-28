@@ -20,6 +20,7 @@ class World {
   public static var tile4:Loader;
   public static var loaded:Int;
   public static function loadStuff() {
+
     var bg = new Loader();
     bg.contentLoaderInfo.addEventListener(Event.COMPLETE, completeHandler);
     bg.load(new URLRequest("assets/background_nightsky.png"));
@@ -68,7 +69,7 @@ class World {
   static var screenw:Int = 600;
   static var screenh:Int = 600;
   
-  static var tilesize:Int = Tile.size;
+  public static var tilesize:Int = Tile.size;
   static var tilesh = Math.round(screenh/tilesize);
   static var tilesw = Math.round(screenw/tilesize);
 
