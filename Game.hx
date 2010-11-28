@@ -37,13 +37,15 @@ class Game {
       }     
   } 
 
+  // XXX this will wrap stupidly and everything will be ruined forever
+  static var frame : Int = 0;
   static function mainLoop(e : Event) {
     // race condition lol
     if (!LoadStuff.loadsDone()) {
       return;
     }
     World.clearTheTiles();
-    World.drawTheTiles();
+    World.drawTheTiles(frame++);
     Simulate.drawMoves([{x:5,y:5}]);
   }
 
