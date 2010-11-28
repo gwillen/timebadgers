@@ -15,15 +15,20 @@ class World {
   public static var tile4:Loader;
   public static var loaded:Int;
   public static function loadStuff() {
+    var bg = new Loader();
+    bg.contentLoaderInfo.addEventListener(Event.COMPLETE, completeHandler);
+    bg.load(new URLRequest("assets/background_nightsky.png"));
+    Game.rootmc.addChild(bg);
+
     tile1 = new Loader();
     tile1.contentLoaderInfo.addEventListener(Event.COMPLETE, completeHandler);
-    tile1.load(new URLRequest("assets/tile_xwindows.png"));
+    tile1.load(new URLRequest("assets/tile_zebra.png"));
     tile2 = new Loader();
     tile2.contentLoaderInfo.addEventListener(Event.COMPLETE, completeHandler);
     tile2.load(new URLRequest("assets/tile_suspensionbridge.png"));
     tile3 = new Loader();
     tile3.contentLoaderInfo.addEventListener(Event.COMPLETE, completeHandler);
-    tile3.load(new URLRequest("assets/tile_zebra.png"));
+    tile3.load(new URLRequest("assets/tile_movesup.png"));
     tile4 = new Loader();
     tile4.contentLoaderInfo.addEventListener(Event.COMPLETE, completeHandler);
     tile4.load(new URLRequest("assets/tile_psychedelic.png"));
@@ -36,7 +41,7 @@ class World {
     var loader:Loader = event.target.loader;
     loaded++;
 
-    if (loaded == 4) {
+    if (loaded == 5) {
       // Now everything is loaded. This is stupid.
       trace("Going to init tiles.");
       initTiles();
@@ -96,6 +101,8 @@ class World {
 
   // Must work on invalid coords; return true.
   public static function isBlocked(w: World_t, x:Int, y:Int) :Bool {
+   if (x < 0 || x >= tilesw || y < 0 || y >= tilesh) { return true;}
+    else    
     return switch (getTile(x, y).type ) {   
       case TileType.floor: true;
       default : false;
@@ -104,6 +111,8 @@ class World {
 
   // Must work on invalid coords; return true;
   public static function canStandOn(w: World_t, x:Int, y:Int) :Bool {
+   if (x < 0 || x >= tilesw || y < 0 || y >= tilesh) { return false;}
+    else    
     return switch (getTile(x, y).type ) {   
       case TileType.floor: true; 
       //XXX also bridges
