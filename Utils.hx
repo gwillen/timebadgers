@@ -32,3 +32,9 @@ enum Option<T> {
   some(t:T);
 }
 
+class Ref<T> {
+  public var val : T;
+  public function new(t : T) {
+    val = t;
+  }
+}

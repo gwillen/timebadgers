@@ -37,6 +37,10 @@ class Game {
   } 
 
   static function mainLoop(e : Event) {
+    // race condition lol
+    if (!LoadStuff.loadsDone()) {
+      return;
+    }
     World.clearTheTiles();
     World.drawTheTiles();
     Simulate.drawMoves([{x:5,y:5}]);
