@@ -8,6 +8,7 @@ import flash.net.URLRequest;
 import flash.display.Sprite;
 import flash.display.Bitmap;
 
+import World.World;
 import World.Tile;
 import flash.events.Event;
 import flash.events.MouseEvent;

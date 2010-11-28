@@ -6,6 +6,8 @@ import flash.display.Loader;
 import flash.display.Sprite;
 import flash.events.Event;
 
+typedef World_t = Array<Array<Tile>>;
+
 class World {
   public static var tile1:Loader;
   public static var tile2:Loader;
@@ -28,6 +30,8 @@ class World {
     trace("World loading stuff.");
   }
 
+  var worldState: World_t;
+
   public static function completeHandler(event : Event) {
     var loader:Loader = event.target.loader;
     loaded++;
@@ -42,7 +46,8 @@ class World {
     }
   }
 
-  var worldState: Array<Array<Tile>>;
+
+
 
   static var tileSz = 20; // XXX
 
@@ -63,7 +68,22 @@ class World {
       y += tileSz;
     }
   }
+
+
+
+
   */
+/*
+  static function isBlocked(w: World, x:Int, y: Int) {
+    return switch (w[x][y] ) {   
+      case floor: true;
+      otherwise : false;
+    }
+  }
+*/
+
+
+
 }
 
 enum TileType {
