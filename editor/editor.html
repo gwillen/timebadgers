@@ -214,7 +214,7 @@ function redrawmap() {
 	var img = IMG('tile', elt);
 	img.src = anyimage(tile);
 	img.frames = tile.frames;
-	img.localoffset = ((x * 1131) % 971) + ((y * 4571) % 37);
+	img.localoffset = 0; // ((x * 1131) % 971) + ((y * 4571) % 37);
 	// Images are y-offset by 12 pixels.
 	img.style.top = y * HEIGHT - HEADER;
 	img.style.left = x * WIDTH;
@@ -406,6 +406,9 @@ Welcome on map editor
 002f 1100000000000000 tile_rand_strut.png 1
 0030 1100000000000000 tile_pedestal_left.png 1
 0031 1100000000000000 tile_pedestal_right.png 1
+0032 1100000000000000 tile_conveyorl1.png 5 tile_conveyorl2.png 5 tile_conveyorl2.5.png 5 tile_conveyorl3.png 5 tile_conveyorl4.png 5
+0033 1100000000000000 tile_conveyorl4.png 5 tile_conveyorl3.png 5 tile_conveyorl2.5.png 5 tile_conveyorl2.png 5 tile_conveyorl1.png 5
+0034 1100000000000000 char_badgerr1.png 10 char_badgerr2.png 10
 </textarea>
 
 </div>
