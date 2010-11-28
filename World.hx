@@ -21,7 +21,7 @@ class World {
     LoadStuff.loadTextFileAndCall("TILEMAP", function(x) { trace(x); });
 
     LoadStuff.loadImageAndCall("assets/background_nightsky.png", function(l) {
-      Game.rootmc.addChild(l);
+      Game.rootmc.addChildAt(l, 0);
     });
 
     tile = new Array<Ref<Loader>>();
