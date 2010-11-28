@@ -15,7 +15,7 @@ class LoadStuff {
     // Is there a \r problem here?
     var lines : Array<String> = tilemap.split("\n");
     var counter : Int = 0;
-    trace("processing tilemap");
+    Game.debugtf.trace("processing tilemap");
     for (line in lines) {
       var style = new TileStyle();
       style.frames = new Array<TileFrame>();
@@ -30,12 +30,12 @@ class LoadStuff {
         style.frames.push(frame);
         frame.delay = Std.parseInt(delay);
         frame.filename = filename;
-        trace("filename is |" + filename + "|");
+        Game.debugtf.trace("filename is |" + filename + "|");
         loadImageAndCall(filename, function (l) {
           var bitmap : Bitmap = cast l.content;
           frame.buf = bitmap.bitmapData;
-          trace("loaded buf");
-          trace(frame.buf);
+          Game.debugtf.trace("loaded buf");
+          Game.debugtf.trace("" + frame.buf);
         });
       }
       tilestyles[counter] = style;
@@ -64,7 +64,7 @@ class LoadStuff {
 
   public static function batchOneLoadedHandler() {
     count--;
-    trace("Loader finished one; count is now " + count);
+    Game.debugtf.trace("Loader finished one; count is now " + count);
     if (count == 0) {
       batchCompleteHandler();
     }
@@ -95,10 +95,10 @@ class LoadStuff {
   public static function loadImageAndCall(filename : String, f) {
     var loader = new Loader();
     filename = "assets/" + filename;
-    trace("Beginning load of " + filename);
+    Game.debugtf.trace("Beginning load of " + filename);
     loader.contentLoaderInfo.addEventListener(Event.COMPLETE, function(e : Event) {
-      trace("done load of " + filename);
-      trace("content is " + e.target.loader.content);
+      Game.debugtf.trace("done load of " + filename);
+      Game.debugtf.trace("content is " + e.target.loader.content);
       f(e.target.loader);
     });
     loader.load(new URLRequest(filename));

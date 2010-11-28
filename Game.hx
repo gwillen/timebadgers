@@ -10,6 +10,7 @@ import flash.display.Bitmap;
 
 import World.World;
 import World.Tile;
+import DebugTextField;
 import flash.events.Event;
 import flash.events.MouseEvent;
 import flash.events.KeyboardEvent;
@@ -23,14 +24,14 @@ class Game {
 
   public static var rootmc : MovieClip;
   public static var mainmc : MovieClip;
-  static var debugtf : TextField;  
+  public static var debugtf : DebugTextField;  
 
   static function handleclick(event : MouseEvent) {
-      debugtf.appendText("you mousedowned at " + event.localX + " " + event.localY + "\n");
+      debugtf.trace("you mousedowned at " + event.localX + " " + event.localY + "\n");
   }
 
   static function handlekeydown(event : KeyboardEvent) {
-      debugtf.appendText("you pushed this button: " + event + "\n"); 
+      debugtf.trace("you pushed this button: " + event + "\n"); 
       if(event.charCode == 100){ // 'd'
          debugtf.visible = !debugtf.visible;
       }     
@@ -51,9 +52,9 @@ class Game {
       rootmc = flash.Lib.current;    
       mainmc = new MovieClip(); 
       mainmc.addEventListener(Event.ENTER_FRAME, mainLoop);
-      debugtf = new TextField();
-      debugtf.width = 600;
-      debugtf.height = 600;
+      debugtf = new DebugTextField();
+
+
 
 
       //flash.Lib.setErrorHandler(Utils.myHandler);
