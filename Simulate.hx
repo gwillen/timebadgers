@@ -14,6 +14,8 @@ class Simulate {
  */
 
 
+ /* where can we jump if we start at {x,y} ?
+  */
  public static function validJumps(w0: World_t, w1: World_t, x: Int, y: Int) : Array< Coor>{
     var r: Array<Coor>  = new Array<Coor>();
      for(j in Jump.jmps){
@@ -30,9 +32,9 @@ class Simulate {
         var s = new Sprite();
         s.x = mv.x * World.tilesize + World.tilesize / 2;
         s.y = mv.y * World.tilesize + World.tilesize / 2; // 12-pixel overlap zone
-    s.graphics.beginFill(0x0000FF);
-    s.graphics.drawCircle(0,0,7);
-    s.graphics.endFill();
+        s.graphics.beginFill(0x0000FF);
+        s.graphics.drawCircle(0,0,7);
+        s.graphics.endFill();
         s.visible= true;
         Game.mainmc.addChild(s);    
  }

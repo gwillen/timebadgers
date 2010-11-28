@@ -26,10 +26,9 @@ class World {
       Game.rootmc.addChildAt(l, 0);
     });
 
-    tile = new Array<Ref<Loader>>();
-    for (i in 0...4) {
-      tile[i] = new Ref(new Loader());
-    }
+    // Also async
+    worldState = new Array<Tile>();
+    LoadStuff.loadLevel("skyline1.map", worldState);
 
     // call initTiles when the loading is all completed. XXX: it is no longer
     // really necessary to do this in this order, since all our logic is in
@@ -43,16 +42,16 @@ class World {
     LoadStuff.batchLoadImage("assets/tile_psychedelic.png", tile[3]);
     LoadStuff.endBatchLoad();
     */
-    initTiles();
+    //initTiles();
 
-    trace("World loading stuff.");
+    Game.debugtf.trace("World loading stuff.\n");
   }
 
   static var worldState: World_t;
   public static var tileStyles : Array<TileStyle>;
 
-  public static function drawTheTiles() {
-    drawTiles(worldState);
+  public static function drawTheTiles(frame : Int) {
+    drawTiles(worldState, frame);
   }
 
   public static function clearTheTiles() {
@@ -69,8 +68,9 @@ class World {
   static var tilesh = Math.round(screenh/tilesize);
   static var tilesw = Math.round(screenw/tilesize);
 
+/*
   public static function initTiles () {
-    trace("initTiles");
+    Game.debugtf.trace("initTiles");
     worldState = new Array<Tile>();
     for (y in 0...tilesh) {
       for (x in 0...tilesw) {
@@ -78,12 +78,13 @@ class World {
       }
     }
   }
+  */
 
-  public static function drawTiles(tiles:Array<Tile>) {
-    for ( y in 0...tilesh ) {
-      for (x in 0...tilesw ) {
+  public static function drawTiles(tiles : Array<Tile>, frame : Int) {
+    for (y in 0...tilesh) {
+      for (x in 0...tilesw) {
         var thistile:Tile = getTile(x, y);
-        var tileb = thistile.getImage();
+        var tileb = thistile.getImage(frame, x, y);
         var b = new Bitmap(tileb);
         var s = new Sprite();
         s.x = x * tilesize;
@@ -157,19 +158,21 @@ class TileStyle {
 class Tile {
   public function new() {}
   public static var size:Int = 20; // width and height
-  public var image:flash.display.Loader;
   public var type:TileType;
   public var style:TileStyle;
-  public function getImage() {
+  public function getImage(frame : Int, x : Int, y : Int) {
+    var animFrame = frame % style.frames.length;
+    return style.frames[animFrame].buf;
+    /*
     var styleNum : Int = Math.floor(Math.random() * World.tileStyles.length);
-    //return World.tileStyles[2].frames[0].buf;
     try {
       return World.tileStyles[styleNum].frames[0].buf;
     } catch ( d : Dynamic ) {
-      trace("Failed number was " + styleNum);
-      //trace("Failed frame was " + World.tileStyles[styleNum].frames[0].filename);
+      Game.debugtf.trace("Failed number was " + styleNum);
+      //Game.debugtf.trace("Failed frame was " + World.tileStyles[styleNum].frames[0].filename);
       return World.tileStyles[0].frames[0].buf;
     }
+    */
   }
 }
 

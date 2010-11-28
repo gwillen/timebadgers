@@ -17,9 +17,9 @@
 0010 1100000000000000 tile_onbuildingltop.png 1
 0011 1100000000000000 tile_onbuildingtop.png 1
 0012 1100000000000000 tile_psychedelic.png 1
-0013 1000000000000000 tile_suspensionbridge.png 5 tile_suspensionbridge2.png 5
-0014 1000000000000000 tile_suspensionbridgel.png 4 tile_suspensionbridgel2.png 5
-0015 1000000000000000 tile_suspensionbridger.png 6 tile_suspensionbridger2.png 5
+0013 1000000000000000 tile_suspensionbridge.png 2 tile_suspensionbridge2.png 8
+0014 1000000000000000 tile_suspensionbridgel.png 2 tile_suspensionbridgel2.png 9
+0015 1000000000000000 tile_suspensionbridger.png 2 tile_suspensionbridger3.png 7 tile_suspensionbridger2.png 2 tile_suspensionbridger3.png 7
 0016 1000000000000000 tile_thinbridge.png 1
 0017 1000000000000000 tile_thinbridgel.png 1
 0018 1000000000000000 tile_thinbridger.png 1
