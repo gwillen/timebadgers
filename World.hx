@@ -77,7 +77,13 @@ class World {
     }
   }
 
-
+  static function canStandOn(w: World_t, x:Int, y:Int) :Bool {
+    return switch (w[x][y].type ) {   
+      case TileType.floor: true; 
+      //XXX also bridges
+      default : false;
+    }
+  }
 
 
 }
