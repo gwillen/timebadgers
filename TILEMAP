@@ -48,3 +48,6 @@
 002f 1100000000000000 tile_rand_strut.png 1
 0030 1100000000000000 tile_pedestal_left.png 1
 0031 1100000000000000 tile_pedestal_right.png 1
+0032 1100000000000000 tile_conveyorl1.png 5 tile_conveyorl2.png 5 tile_conveyorl2.5.png 5 tile_conveyorl3.png 5 tile_conveyorl4.png 5
+0033 1100000000000000 tile_conveyorl4.png 5 tile_conveyorl3.png 5 tile_conveyorl2.5.png 5 tile_conveyorl2.png 5 tile_conveyorl1.png 5
+0034 1100000000000000 char_badgerr1.png 10 char_badgerr2.png
