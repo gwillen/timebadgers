@@ -2,17 +2,60 @@
 <head>
 <title>Untitled Time Badger Game Editor Application</title>
 <style>
-  img.tile {
-    position: absolute;
-  }
+img.tile {
+  position: absolute;
+}
+
+span.saveload {
+  cursor: pointer;
+  color: #9aF;
+  text-decoration: underline;
+}
+
+span.icon {
+  font-size: 11px;
+  margin-right: 2px;
+}
+
+div.selectable {
+  cursor: pointer;
+  width: 24px;
+  height: 36px;
+  padding: 1px;
+  margin: 1px;
+  border: 1px solid #EEEEEE;
+  float: left;
+}
+
+div.selected {
+  float: left;
+  width: 24px;
+  height: 36px;
+  padding: 1px;
+  margin: 0px;
+  border: 2px solid #FF00FF;
+}
+
+div.clickme {
+  position: absolute;
+  width: 600px;
+  height: 600px;
+  z-index: 9999;
+  cursor: pointer;
+}
+
+br.clear {
+  clear: both;
+}
+
 </style>
 <script>
+
+// n.b. this must agree with ../TILEMAP.
 var tiles = [
 { gfx: null, img: null },
 { gfx: "char_turtlel.png", img: null },
 { gfx: "char_turtler.png", img: null },
-{ gfx: "tile_dummy1.jpg", img: null },
-{ gfx: "tile_dummy2.jpg", img: null },
 { gfx: "tile_midbuilding.png", img: null },
 { gfx: "tile_midbuildingl.png", img: null },
 { gfx: "tile_midbuildingltop.png", img: null },
@@ -47,6 +90,12 @@ function makeElement(what, cssclass, elt) {
 }
 function IMG(cssclass, elt) { return makeElement('IMG', cssclass, elt); }
 function DIV(cssclass, elt) { return makeElement('DIV', cssclass, elt); }
+function BR(cssclass, elt) { return makeElement('BR', cssclass, elt); }
+function TEXT(contents, elt) {
+  var e = document.createTextNode(contents);
+  if (elt) elt.appendChild(e);
+  return e;
+}
 
 function tilesrc(tile) {
   return '../assets/' + tile.gfx;
@@ -58,7 +107,7 @@ var TILESW = 30, TILESH = 30, HEADER = 12;
 /* Load tile images, make data dense with nothings */
 function init() {
   for (var i = 0; i < TILESW * TILESH; i++)
-    data.push(i % tiles.length);
+    data.push(0);
   for (var i = 0; i < tiles.length; i++) {
     if (tiles[i].gfx) {
       // Just preload.
@@ -74,7 +123,20 @@ function settileat(x, y, t) {
   data[y * TILESW + x] = t;
 }
 
-function redraw() {
+function screentopos(x, y) {
+  return { x: Math.floor(x / WIDTH),
+	   y: Math.floor(y / WIDTH) };
+}
+
+function clickmeClickHandler() {
+  return function(event) {
+    var pos = screentopos(event.pageX, event.pageY);
+    settileat(pos.x, pos.y, cur_tile);
+    redrawmap();
+  }
+}
+
+function redrawmap() {
   var elt = document.getElementById('map');
   elt.innerHTML = '';
   for (var y = 0; y < TILESH; y++) {
@@ -89,9 +151,83 @@ function redraw() {
       }
     }
   }
+  var clickme = DIV('clickme', elt);
+  // clickme.onmousemove = mouseMoveHandler();
+  clickme.onclick = clickmeClickHandler();
 }
 
 var cur_tile = 1;
+
+function redrawstatus() {
+  var elt = document.getElementById('status');
+  elt.innerHTML = '';
+  TEXT('Currently selected: ', elt);
+  var img = IMG(null, elt);
+  var tile = tiles[cur_tile];
+  img.src = tilesrc(tiles[cur_tile]);
+  TEXT(' Tile #' + cur_tile + ': ' + (tile.gfx || '(empty)'), elt);
+}
+
+function selectHandler(idx) {
+  return function() {
+    cur_tile = idx;
+    redrawstatus();
+    redrawtiles();
+  };
+}
+
+function redrawtiles() {
+  var elt = document.getElementById('tiles');
+  elt.innerHTML = '';
+  // TODO: ability to set background of tile thingy.
+  for (var i = 0; i < tiles.length; i++) {
+    var d = DIV((i == cur_tile) ? 'selected' : 'selectable', elt);
+    d.onclick = selectHandler(i);
+    if (tiles[i].gfx) {
+      var img = IMG(null, d);
+      img.src = tilesrc(tiles[i]);
+    } else {
+      TEXT('no', d);
+    }
+  }
+  BR('clear', elt);
+}
+
+function redraw() {
+  redrawmap();
+  redrawstatus();
+  redrawtiles();
+}
+
+// Returns n as a 4-digit hex string
+function hex(n) {
+  var s = n.toString(16);
+  switch (s.length) {
+  case 0: return '0000';
+  case 1: return '000' + s;
+  case 2: return '00' + s;
+  case 3: return '0' + s;
+  default: return s;
+  }
+}
+
+function save() {
+  var elt = document.getElementById('mapdata');
+  var lines = [];
+  for (var y = 0; y < TILESH; y++) {
+    var line = [];
+    for (var x = 0; x < TILESW; x++) {
+      line.push(hex(tileat(x, y)));
+    }
+    lines.push(line.join(" "));
+  }
+  elt.value = lines.join("\n");
+}
+
+function load() {
+  alert('j/k u cannot load');
+}
+
 
 init();
 
@@ -103,8 +239,16 @@ init();
 <div id="message" style="margin-left: 610px; font-size: 20px">
 Welcome on map editor
 </div>
+<div id="status" style="margin-left: 610px; border: 1px solid #CCCCCC; height: 40px">
+</div>
 <div id="tiles" style="margin-left: 610px; border: 1px solid #CCCCCC">
 </div>
 <br>
+<div style="margin-left: 610px">
+[<span class="icon">&hearts;</span><span class="saveload" onclick="save()">save to textarea</span>]&nbsp;
+[<span class="icon">&#9836;</span><span class="saveload" onclick="load()">load from textarea</span>]
+  <br><textarea id="mapdata" style="border: 2px solid #CCAAAAA; padding: 3px; width: 100%; height:200px; margin-top: 0.7em">
+</textarea>
+</div>
 </body>
 </html>
