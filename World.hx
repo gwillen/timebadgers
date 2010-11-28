@@ -8,6 +8,11 @@ import flash.display.Bitmap;
 
 typedef World_t = Array<Tile>;
 
+typedef Coor = {
+    var x : Int;
+    var y : Int;
+}   
+
 class World {
   public static var tile1:Loader;
   public static var tile2:Loader;

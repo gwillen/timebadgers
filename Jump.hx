@@ -9,10 +9,7 @@ import flash.geom.Point;
 import World;
 
 
-typedef Coor = {
-    var x : Int;
-    var y : Int;
-}   
+
 
 typedef Jmp = {
     var dest : Coor;
