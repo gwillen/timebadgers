@@ -14,6 +14,8 @@ import flash.events.Event;
 import flash.events.MouseEvent;
 import flash.events.KeyboardEvent;
 
+import Simulate;
+
 class Game {
   static var rootmc : MovieClip;
   static var mainmc : MovieClip;

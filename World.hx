@@ -70,14 +70,14 @@ class World {
   */
 
 
-  static function isBlocked(w: World_t, x:Int, y:Int) :Bool {
+  public static function isBlocked(w: World_t, x:Int, y:Int) :Bool {
     return switch (w[x][y].type ) {   
       case TileType.floor: true;
       default : false;
     }
   }
 
-  static function canStandOn(w: World_t, x:Int, y:Int) :Bool {
+  public static function canStandOn(w: World_t, x:Int, y:Int) :Bool {
     return switch (w[x][y].type ) {   
       case TileType.floor: true; 
       //XXX also bridges

@@ -121,10 +121,22 @@ class Jump extends Sprite {
 
 
 
-  static function canjump(j:Jmp, w0: World, w1: World, x: Int, y: Int): Bool {
+  static function canjump(j:Jmp, w0: World_t, w1: World_t, x: Int, y: Int): Bool {
        var r: Bool = true;
-        (j.dest.x + x
+        if(! World.canStandOn(w1, j.dest.x + x, j.dest.y + y)){
+             r = false;
+        }
+
+        for(p in j.path){
+           if(World.isBlocked(w0, p.x + x, p.y + y)){
+                r = false;
+           }
+        }
+
+        return r;
   }
+
+
 
   static function main() {
     trace ( stringofjmp(leftjmps[6] ));
@@ -139,7 +151,6 @@ class Jump extends Sprite {
     mc.graphics.lineTo(50,100);
     mc.graphics.endFill();
 
-    mc.stage.addEventListener(MouseEvent.MOUSE_DOWN, handleclick );
 
   }
 }
