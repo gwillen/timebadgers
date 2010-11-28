@@ -80,6 +80,9 @@ var tiles = [
 { gfx: "tile_thinbridger.png", img: null },
 { gfx: "tile_xwindows.png", img: null },
 { gfx: "tile_zebra.png", img: null },
+{ gfx: "tile_midbuildingalt.png", img: null },
+{ gfx: "tile_midbuildingltopcrenellation.png", img: null },
+{ gfx: "tile_onbuilding.png", img: null },
 ];
 
 function makeElement(what, cssclass, elt) {
@@ -211,6 +214,10 @@ function hex(n) {
   }
 }
 
+function dec(h) {
+  return parseInt(h, 16);
+}
+
 function save() {
   var elt = document.getElementById('mapdata');
   var lines = [];
@@ -225,9 +232,33 @@ function save() {
 }
 
 function load() {
-  alert('j/k u cannot load');
+  var elt = document.getElementById('mapdata');
+  var newdata = [];
+  var lines = elt.value.split("\n");
+  if (lines.length < TILESH) {
+    alert("Not enough lines!");
+    return;
+  }
+  for (var y = 0; y < TILESH; y++) {
+    var parts = lines[y].split(" ");
+    if (parts.length != TILESW) {
+      alert("Line " + y + " has " + parts.size +
+	    " parts, not " + TILESW + "!");
+      return;
+    }
+    for (var x = 0; x < TILESW; x++) {
+      var t = dec(parts[x]);
+      if (t < 0 || t >= tiles.length) {
+	alert("Sorry this contains tile #" +
+	      t + " and that is bullshit");
+	return;
+      }
+      newdata.push(dec(parts[x]));
+    }
+  }
+  data = newdata;
+  redraw();
 }
-
 
 init();
 
