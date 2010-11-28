@@ -56,6 +56,9 @@ var tilemap = [];
 // Array of tiles in preferred order.
 var tiles = [];
 
+// Current frame number, updated by periodic timer.
+var framenum = 0;
+
 function makeElement(what, cssclass, elt) {
   var e = document.createElement(what);
   if (cssclass) e.setAttribute('class', cssclass);
@@ -86,6 +89,50 @@ function hasimage(tile) {
 var data = [];
 var WIDTH = 20, HEIGHT = 20;
 var TILESW = 30, TILESH = 30, HEADER = 12;
+
+var FRAMESMS = 50;
+function onenterframe() {
+  framenum++;
+
+  // See if any images need to be modified.
+  // We just check every image on the whole
+  // page because most of them are tiles, anyway.
+  // The .frames property set by us is what
+  // lets us know this should be animated.
+  for (o in document.images) {
+    var frames = document.images[o].frames;
+    // Only do it for animated 
+    if (frames && frames.length > 1) {
+      /* What frame are we on? */
+      var period = 0;
+      // PERF this never changes and could
+      // be cached.
+      for (var i = 0; i < frames.length; i++)
+	period += frames[i].delay;
+      var localframe = framenum % period;
+      var newsrc;
+      for (var i = 0; i < frames.length; i++) {
+	if (localframe < frames[i].delay) {
+	  newsrc = tilesrc(frames[i].img);
+	  break;
+	} else {
+	  localframe -= frames[i].delay;
+	}
+      }
+      if (newsrc && document.images[o].src != newsrc) {
+	// alert(newsrc);
+	document.images[o].src = newsrc;
+      }
+    }
+  }
+
+  // Better to have jitter than overflow.
+  if (framenum > 100000000) {
+    framenum = 0;
+  }
+  setTimeout(onenterframe, FRAMESMS);
+}
+
 /* Load tile images, make data dense with nothings */
 function init() {
   // Parse TILEMAP.
@@ -120,6 +167,7 @@ function init() {
     data.push(0);
 
   redraw();
+  onenterframe();
 }
 
 function tileat(x, y) {
@@ -162,6 +210,7 @@ function redrawmap() {
       if (hasimage(tile)) {
 	var img = IMG('tile', elt);
 	img.src = anyimage(tile);
+	img.frames = tile.frames;
 	// Images are y-offset by 12 pixels.
 	img.style.top = y * HEIGHT - HEADER;
 	img.style.left = x * WIDTH;
@@ -188,6 +237,7 @@ function redrawstatus() {
   var img = IMG(null, elt);
   var tile = tilemap[cur_tile];
   img.src = anyimage(tilemap[cur_tile]);
+  img.frames = tilemap[cur_tile].frames;
   TEXT(' Tile #' + cur_tile + ': ' + (anyimage(tile) || '(empty)'), elt);
 }
 
@@ -209,6 +259,7 @@ function redrawtiles() {
     if (hasimage(tiles[i])) {
       var img = IMG(null, d);
       img.src = anyimage(tiles[i]);
+      img.frames = tiles[i].frames;
     } else {
       TEXT('no', d);
     }
@@ -320,9 +371,9 @@ Welcome on map editor
 0010 1100000000000000 tile_onbuildingltop.png 1
 0011 1100000000000000 tile_onbuildingtop.png 1
 0012 1100000000000000 tile_psychedelic.png 1
-0013 1000000000000000 tile_suspensionbridge.png 1
-0014 1000000000000000 tile_suspensionbridgel.png 1
-0015 1000000000000000 tile_suspensionbridger.png 1
+0013 1000000000000000 tile_suspensionbridge.png 5 tile_suspensionbridge2.png 5
+0014 1000000000000000 tile_suspensionbridgel.png 4 tile_suspensionbridgel2.png 5
+0015 1000000000000000 tile_suspensionbridger.png 6 tile_suspensionbridger2.png 5
 0016 1000000000000000 tile_thinbridge.png 1
 0017 1000000000000000 tile_thinbridgel.png 1
 0018 1000000000000000 tile_thinbridger.png 1

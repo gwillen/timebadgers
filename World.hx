@@ -5,6 +5,7 @@ import flash.display.Loader;
 import flash.display.Sprite;
 import flash.events.Event;
 import flash.display.Bitmap;
+import flash.display.BitmapData;
 
 typedef World_t = Array<Tile>;
 
@@ -14,45 +15,35 @@ typedef Coor = {
 }   
 
 class World {
-  public static var tile1:Loader;
-  public static var tile2:Loader;
-  public static var tile3:Loader;
-  public static var tile4:Loader;
-  public static var loaded:Int;
-  public static function loadStuff() {
-    var bg = new Loader();
-    bg.contentLoaderInfo.addEventListener(Event.COMPLETE, completeHandler);
-    bg.load(new URLRequest("assets/background_nightsky.png"));
-    Game.rootmc.addChild(bg);
+  public static var tile:Array<Ref<Loader>>;
 
-    tile1 = new Loader();
-    tile1.contentLoaderInfo.addEventListener(Event.COMPLETE, completeHandler);
-    tile1.load(new URLRequest("assets/tile_zebra.png"));
-    tile2 = new Loader();
-    tile2.contentLoaderInfo.addEventListener(Event.COMPLETE, completeHandler);
-    tile2.load(new URLRequest("assets/tile_suspensionbridge.png"));
-    tile3 = new Loader();
-    tile3.contentLoaderInfo.addEventListener(Event.COMPLETE, completeHandler);
-    tile3.load(new URLRequest("assets/tile_movesup.png"));
-    tile4 = new Loader();
-    tile4.contentLoaderInfo.addEventListener(Event.COMPLETE, completeHandler);
-    tile4.load(new URLRequest("assets/tile_psychedelic.png"));
+  public static function loadStuff() {
+    LoadStuff.loadTextFileAndCall("TILEMAP", function(x) { trace(x); });
+
+    LoadStuff.loadImageAndCall("assets/background_nightsky.png", function(l) {
+      Game.rootmc.addChildAt(l, 0);
+    });
+
+    tile = new Array<Ref<Loader>>();
+    for (i in 0...4) {
+      tile[i] = new Ref(new Loader());
+    }
+
+    // call initTiles when the loading is all completed. XXX: it is no longer
+    // really necessary to do this in this order, since all our logic is in
+    // frameDidLoad or whatever, which won't get called till we return from
+    // main (which is what's calling this to do the loading.)
+    LoadStuff.startBatchLoad(initTiles);
+    LoadStuff.batchLoadImage("assets/tile_xwindows.png", tile[0]);
+    LoadStuff.batchLoadImage("assets/tile_suspensionbridge.png", tile[1]);
+    LoadStuff.batchLoadImage("assets/tile_zebra.png", tile[2]);
+    LoadStuff.batchLoadImage("assets/tile_psychedelic.png", tile[3]);
+    LoadStuff.endBatchLoad();
+
     trace("World loading stuff.");
   }
 
   static var worldState: World_t;
-
-  public static function completeHandler(event : Event) {
-    var loader:Loader = event.target.loader;
-    loaded++;
-
-    if (loaded == 5) {
-      // Now everything is loaded. This is stupid.
-      trace("Going to init tiles.");
-      initTiles();
-      //haxe.Timer.delay(drawTheTiles, 0);
-    }
-  }
 
   public static function drawTheTiles() {
     drawTiles(worldState);
@@ -68,11 +59,12 @@ class World {
   static var screenw:Int = 600;
   static var screenh:Int = 600;
   
-  static var tilesize:Int = Tile.size;
+  public static var tilesize:Int = Tile.size;
   static var tilesh = Math.round(screenh/tilesize);
   static var tilesw = Math.round(screenw/tilesize);
 
   public static function initTiles () {
+    trace("initTiles");
     worldState = new Array<Tile>();
     for (y in 0...tilesh) {
       for (x in 0...tilesw) {
@@ -142,20 +134,32 @@ class MovingFloor {
   var id:Option<Int>;  // id of linked butan
 }
 
+class TileFrame {
+  public var buf : BitmapData;
+  public var delay : Int;
+}
+
+class TileStyle {
+  public var frames : Array<TileFrame>;
+  public var standon : Bool;
+  public var solid : Bool;
+}
+
 class Tile {
   public static var size:Int = 20; // width and height
   public var image:flash.display.Loader;
   public var type:TileType;
+  public var style:TileStyle;
   public function new() {}
   public function getImage() {
     if (Math.random() > 0.5) {
-      return World.tile1;
+      return World.tile[0].val;
     } else if (Math.random() > 0.5) {
-      return World.tile2;
+      return World.tile[1].val;
     } else if (Math.random() > 0.5) {
-      return World.tile3;
+      return World.tile[2].val;
     } else {
-      return World.tile4;
+      return World.tile[3].val;
     }
   }
 }
