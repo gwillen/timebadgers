@@ -1,27 +1,36 @@
-0000 0000000000000000 null
-0001 1100000000000000 char_turtlel.png
-0002 1100000000000000 char_turtler.png
-0003 1100000000000000 tile_midbuilding.png
-0004 1100000000000000 tile_midbuildingl.png
-0005 1100000000000000 tile_midbuildingltop.png
-0006 1100000000000000 tile_midbuildingtop.png
-0007 1100000000000000 tile_midbuildingtopantenna.png
-0008 1100000000000000 tile_midbuildingtopcrenellation.png
-0009 1100000000000000 tile_midbuildingtopsatellite.png
-000a 1100000000000000 tile_movesdown.png
-000b 1100000000000000 tile_movesleft.png
-000c 1100000000000000 tile_movesright.png
-000d 1100000000000000 tile_movesup.png
-000e 1100000000000000 tile_offbuilding.png
-000f 1100000000000000 tile_onbuildingl.png
-0010 1100000000000000 tile_onbuildingltop.png
-0011 1100000000000000 tile_onbuildingtop.png
-0012 1100000000000000 tile_psychedelic.png
-0013 1000000000000000 tile_suspensionbridge.png
-0014 1000000000000000 tile_suspensionbridgel.png
-0015 1000000000000000 tile_suspensionbridger.png
-0016 1000000000000000 tile_thinbridge.png
-0017 1000000000000000 tile_thinbridgel.png
-0018 1000000000000000 tile_thinbridger.png
-0019 1100000000000000 tile_xwindows.png
-001a 1100000000000000 tile_zebra.png
+0000 0000000000000000 null 1
+0001 1100000000000000 char_turtlel.png 1
+0002 1100000000000000 char_turtler.png 1
+0003 1100000000000000 tile_midbuilding.png 1
+0004 1100000000000000 tile_midbuildingl.png 1
+0005 1100000000000000 tile_midbuildingltop.png 1
+0006 1100000000000000 tile_midbuildingtop.png 1
+0007 1100000000000000 tile_midbuildingtopantenna.png 1
+0008 1100000000000000 tile_midbuildingtopcrenellation.png 1
+0009 1100000000000000 tile_midbuildingtopsatellite.png 1
+000a 1100000000000000 tile_movesdown.png 1
+000b 1100000000000000 tile_movesleft.png 1
+000c 1100000000000000 tile_movesright.png 1
+000d 1100000000000000 tile_movesup.png 1
+000e 1100000000000000 tile_offbuilding.png 1
+000f 1100000000000000 tile_onbuildingl.png 1
+0010 1100000000000000 tile_onbuildingltop.png 1
+0011 1100000000000000 tile_onbuildingtop.png 1
+0012 1100000000000000 tile_psychedelic.png 1
+0013 1000000000000000 tile_suspensionbridge.png 1
+0014 1000000000000000 tile_suspensionbridgel.png 1
+0015 1000000000000000 tile_suspensionbridger.png 1
+0016 1000000000000000 tile_thinbridge.png 1
+0017 1000000000000000 tile_thinbridgel.png 1
+0018 1000000000000000 tile_thinbridger.png 1
+0019 1100000000000000 tile_xwindows.png 1
+001a 1100000000000000 tile_zebra.png 1
+001b 1100000000000000 tile_midbuildingalt.png 1
+001c 1100000000000000 tile_midbuildingltopcrenellation.png 1
+001d 1100000000000000 tile_onbuilding.png 1
+001e 1000000000000000 tile_slab.png 1
+001f 1100000000000000 tile_column_left.png 1
+0020 1100000000000000 tile_column_right.png 1
+0021 1100000000000000 tile_capital_left.png 1
+0022 1100000000000000 tile_capital_right.png 1
+0023 1100000000000000 char_gloop1.png 20 char_gloop2.png 7

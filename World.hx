@@ -8,11 +8,21 @@ import flash.display.Bitmap;
 
 typedef World_t = Array<Tile>;
 
+typedef Coor = {
+    var x : Int;
+    var y : Int;
+}   
+
 class World {
   public static var tile:Array<Ref<Loader>>;
 
   public static function loadStuff() {
     LoadStuff.loadTextFileAndCall("TILEMAP", function(x) { trace(x); });
+
+    var bg = new Loader();
+    bg.contentLoaderInfo.addEventListener(Event.COMPLETE, completeHandler);
+    bg.load(new URLRequest("assets/background_nightsky.png"));
+    Game.rootmc.addChild(bg);
 
     tile = new Array<Ref<Loader>>();
     for (i in 0...4) {
@@ -49,7 +59,7 @@ class World {
   static var screenw:Int = 600;
   static var screenh:Int = 600;
   
-  static var tilesize:Int = Tile.size;
+  public static var tilesize:Int = Tile.size;
   static var tilesh = Math.round(screenh/tilesize);
   static var tilesw = Math.round(screenw/tilesize);
 
@@ -88,6 +98,8 @@ class World {
 
   // Must work on invalid coords; return true.
   public static function isBlocked(w: World_t, x:Int, y:Int) :Bool {
+   if (x < 0 || x >= tilesw || y < 0 || y >= tilesh) { return true;}
+    else    
     return switch (getTile(x, y).type ) {   
       case TileType.floor: true;
       default : false;
@@ -96,6 +108,8 @@ class World {
 
   // Must work on invalid coords; return true;
   public static function canStandOn(w: World_t, x:Int, y:Int) :Bool {
+   if (x < 0 || x >= tilesw || y < 0 || y >= tilesh) { return false;}
+    else    
     return switch (getTile(x, y).type ) {   
       case TileType.floor: true; 
       //XXX also bridges

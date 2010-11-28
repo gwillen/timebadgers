@@ -51,36 +51,10 @@ br.clear {
 </style>
 <script>
 
-// n.b. this must agree with ../TILEMAP.
-var tiles = [
-{ gfx: null, img: null },
-{ gfx: "char_turtlel.png", img: null },
-{ gfx: "char_turtler.png", img: null },
-{ gfx: "tile_midbuilding.png", img: null },
-{ gfx: "tile_midbuildingl.png", img: null },
-{ gfx: "tile_midbuildingltop.png", img: null },
-{ gfx: "tile_midbuildingtop.png", img: null },
-{ gfx: "tile_midbuildingtopantenna.png", img: null },
-{ gfx: "tile_midbuildingtopcrenellation.png", img: null },
-{ gfx: "tile_midbuildingtopsatellite.png", img: null },
-{ gfx: "tile_movesdown.png", img: null },
-{ gfx: "tile_movesleft.png", img: null },
-{ gfx: "tile_movesright.png", img: null },
-{ gfx: "tile_movesup.png", img: null },
-{ gfx: "tile_offbuilding.png", img: null },
-{ gfx: "tile_onbuildingl.png", img: null },
-{ gfx: "tile_onbuildingltop.png", img: null },
-{ gfx: "tile_onbuildingtop.png", img: null },
-{ gfx: "tile_psychedelic.png", img: null },
-{ gfx: "tile_suspensionbridge.png", img: null },
-{ gfx: "tile_suspensionbridgel.png", img: null },
-{ gfx: "tile_suspensionbridger.png", img: null },
-{ gfx: "tile_thinbridge.png", img: null },
-{ gfx: "tile_thinbridgel.png", img: null },
-{ gfx: "tile_thinbridger.png", img: null },
-{ gfx: "tile_xwindows.png", img: null },
-{ gfx: "tile_zebra.png", img: null },
-];
+// Map from tile ID to tile.
+var tilemap = [];
+// Array of tiles in preferred order.
+var tiles = [];
 
 function makeElement(what, cssclass, elt) {
   var e = document.createElement(what);
@@ -97,8 +71,16 @@ function TEXT(contents, elt) {
   return e;
 }
 
-function tilesrc(tile) {
-  return '../assets/' + tile.gfx;
+function tilesrc(gfx) {
+  return '../assets/' + gfx;
+}
+
+function anyimage(tile) {
+  return tilesrc(tile.frames[0].img);
+}
+
+function hasimage(tile) {
+  return tile.frames.length > 0;
 }
 
 var data = [];
@@ -106,14 +88,38 @@ var WIDTH = 20, HEIGHT = 20;
 var TILESW = 30, TILESH = 30, HEADER = 12;
 /* Load tile images, make data dense with nothings */
 function init() {
-  for (var i = 0; i < TILESW * TILESH; i++)
-    data.push(0);
-  for (var i = 0; i < tiles.length; i++) {
-    if (tiles[i].gfx) {
-      // Just preload.
-      (new Image()).src = tilesrc(tiles[i]);
+  // Parse TILEMAP.
+  var content = document.getElementById('tilemap').value;
+  var lines = content.split("\n");
+  for (var i = 0; i < lines.length; i++) {
+    var parts = lines[i].split(" ");
+    if (parts.length >= 4 && (parts.length % 2 == 0)) {
+      var num = dec(parts[0]);
+      // n.b. ignored.
+      var bits = parts[1];
+      var frames = [];
+      for (var j = 2; j < parts.length; j += 2) {
+	if (parts[j] != "null") {
+	  var img = parts[j];
+	  var delay = parseInt(parts[j + 1], 10);
+	  frames.push({img: img, delay: delay});
+	  // preload it!
+	  (new Image()).src = tilesrc(tile);
+	}
+      }
+      var tile = { num: num, bits: bits, frames: frames };
+      tilemap[num] = tile;
+      tiles.push(tile);
+    } else if (parts.length != 0 && !(parts.length == 1 && parts[0].length == 0)) {
+      alert('Line with wrong number of parts: ' + lines[i]);
+      return;
     }
   }
+
+  for (var i = 0; i < TILESW * TILESH; i++)
+    data.push(0);
+
+  redraw();
 }
 
 function tileat(x, y) {
@@ -136,15 +142,26 @@ function clickmeClickHandler() {
   }
 }
 
+var mouse_down = false;
+function clickmeMouseMoveHandler() {
+  return function(event) {
+    if (mouse_down) {
+      var pos = screentopos(event.pageX, event.pageY);
+      settileat(pos.x, pos.y, cur_tile);
+      redrawmap();
+    }
+  }
+}
+
 function redrawmap() {
   var elt = document.getElementById('map');
   elt.innerHTML = '';
   for (var y = 0; y < TILESH; y++) {
     for (var x = 0; x < TILESW; x++) {
-      var tile = tiles[tileat(x, y)];
-      if (tile.gfx) {
+      var tile = tilemap[tileat(x, y)];
+      if (hasimage(tile)) {
 	var img = IMG('tile', elt);
-	img.src = tilesrc(tile);
+	img.src = anyimage(tile);
 	// Images are y-offset by 12 pixels.
 	img.style.top = y * HEIGHT - HEADER;
 	img.style.left = x * WIDTH;
@@ -152,8 +169,14 @@ function redrawmap() {
     }
   }
   var clickme = DIV('clickme', elt);
-  // clickme.onmousemove = mouseMoveHandler();
+  clickme.onmousedown = function() {
+    mouse_down = true;
+  };
+  clickme.onmouseup = function() {
+    mouse_down = false;
+  }
   clickme.onclick = clickmeClickHandler();
+  clickme.onmousemove = clickmeMouseMoveHandler();
 }
 
 var cur_tile = 1;
@@ -163,9 +186,9 @@ function redrawstatus() {
   elt.innerHTML = '';
   TEXT('Currently selected: ', elt);
   var img = IMG(null, elt);
-  var tile = tiles[cur_tile];
-  img.src = tilesrc(tiles[cur_tile]);
-  TEXT(' Tile #' + cur_tile + ': ' + (tile.gfx || '(empty)'), elt);
+  var tile = tilemap[cur_tile];
+  img.src = anyimage(tilemap[cur_tile]);
+  TEXT(' Tile #' + cur_tile + ': ' + (anyimage(tile) || '(empty)'), elt);
 }
 
 function selectHandler(idx) {
@@ -183,9 +206,9 @@ function redrawtiles() {
   for (var i = 0; i < tiles.length; i++) {
     var d = DIV((i == cur_tile) ? 'selected' : 'selectable', elt);
     d.onclick = selectHandler(i);
-    if (tiles[i].gfx) {
+    if (hasimage(tiles[i])) {
       var img = IMG(null, d);
-      img.src = tilesrc(tiles[i]);
+      img.src = anyimage(tiles[i]);
     } else {
       TEXT('no', d);
     }
@@ -211,6 +234,10 @@ function hex(n) {
   }
 }
 
+function dec(h) {
+  return parseInt(h, 16);
+}
+
 function save() {
   var elt = document.getElementById('mapdata');
   var lines = [];
@@ -225,15 +252,37 @@ function save() {
 }
 
 function load() {
-  alert('j/k u cannot load');
+  var elt = document.getElementById('mapdata');
+  var newdata = [];
+  var lines = elt.value.split("\n");
+  if (lines.length < TILESH) {
+    alert("Not enough lines!");
+    return;
+  }
+  for (var y = 0; y < TILESH; y++) {
+    var parts = lines[y].split(" ");
+    if (parts.length != TILESW) {
+      alert("Line " + y + " has " + parts.size +
+	    " parts, not " + TILESW + "!");
+      return;
+    }
+    for (var x = 0; x < TILESW; x++) {
+      var t = dec(parts[x]);
+      if (t < 0 || t >= tiles.length) {
+	alert("Sorry this contains tile #" +
+	      t + " and that is bullshit");
+	return;
+      }
+      newdata.push(dec(parts[x]));
+    }
+  }
+  data = newdata;
+  redraw();
 }
-
-
-init();
 
 </script>
 </head>
-<body style="font: 12px Verdana,Helvetica,sans-serif" onload="redraw();">
+<body style="font: 12px Verdana,Helvetica,sans-serif" onload="init();">
 <div id="map" style="position:absolute; top:0; left:0; width:600px; height: 600px; background:url(../assets/background_nightsky.png)">
 </div>
 <div id="message" style="margin-left: 610px; font-size: 20px">
@@ -249,6 +298,47 @@ Welcome on map editor
 [<span class="icon">&#9836;</span><span class="saveload" onclick="load()">load from textarea</span>]
   <br><textarea id="mapdata" style="border: 2px solid #CCAAAAA; padding: 3px; width: 100%; height:200px; margin-top: 0.7em">
 </textarea>
+
+<!-- This should literally be the file ../TILEMAP, which is now the master copy. -->
+<textarea id="tilemap" style="display:none">
+0000 0000000000000000 null 1
+0001 1100000000000000 char_turtlel.png 1
+0002 1100000000000000 char_turtler.png 1
+0003 1100000000000000 tile_midbuilding.png 1
+0004 1100000000000000 tile_midbuildingl.png 1
+0005 1100000000000000 tile_midbuildingltop.png 1
+0006 1100000000000000 tile_midbuildingtop.png 1
+0007 1100000000000000 tile_midbuildingtopantenna.png 1
+0008 1100000000000000 tile_midbuildingtopcrenellation.png 1
+0009 1100000000000000 tile_midbuildingtopsatellite.png 1
+000a 1100000000000000 tile_movesdown.png 1
+000b 1100000000000000 tile_movesleft.png 1
+000c 1100000000000000 tile_movesright.png 1
+000d 1100000000000000 tile_movesup.png 1
+000e 1100000000000000 tile_offbuilding.png 1
+000f 1100000000000000 tile_onbuildingl.png 1
+0010 1100000000000000 tile_onbuildingltop.png 1
+0011 1100000000000000 tile_onbuildingtop.png 1
+0012 1100000000000000 tile_psychedelic.png 1
+0013 1000000000000000 tile_suspensionbridge.png 1
+0014 1000000000000000 tile_suspensionbridgel.png 1
+0015 1000000000000000 tile_suspensionbridger.png 1
+0016 1000000000000000 tile_thinbridge.png 1
+0017 1000000000000000 tile_thinbridgel.png 1
+0018 1000000000000000 tile_thinbridger.png 1
+0019 1100000000000000 tile_xwindows.png 1
+001a 1100000000000000 tile_zebra.png 1
+001b 1100000000000000 tile_midbuildingalt.png 1
+001c 1100000000000000 tile_midbuildingltopcrenellation.png 1
+001d 1100000000000000 tile_onbuilding.png 1
+001e 1000000000000000 tile_slab.png 1
+001f 1100000000000000 tile_column_left.png 1
+0020 1100000000000000 tile_column_right.png 1
+0021 1100000000000000 tile_capital_left.png 1
+0022 1100000000000000 tile_capital_right.png 1
+0023 1100000000000000 char_gloop1.png 20 char_gloop2.png 7
+</textarea>
+
 </div>
 </body>
 </html>
