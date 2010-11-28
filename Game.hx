@@ -39,6 +39,7 @@ class Game {
   static function mainLoop(e : Event) {
     World.clearTheTiles();
     World.drawTheTiles();
+    Simulate.drawMoves([{x:5,y:5}]);
   }
 
   static function main() {
@@ -47,14 +48,6 @@ class Game {
       mainmc = new MovieClip(); 
       mainmc.addEventListener(Event.ENTER_FRAME, mainLoop);
       debugtf = new TextField();
-/*
-      debugtf.width = WORLD_HEIGHT;
-      debugtf.height = WORLD_WIDTH;
-      rootmc.addChild(mainmc);
-      rootmc.addChild(debugtf);
-      mainmc.stage.addEventListener(MouseEvent.MOUSE_DOWN, handleclick );
-      mainmc.stage.addEventListener(KeyboardEvent.KEY_DOWN, handlekeydown );
-*/
       debugtf.width = 600;
       debugtf.height = 600;
 
