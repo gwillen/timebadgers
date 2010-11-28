@@ -144,6 +144,17 @@ function clickmeClickHandler() {
   }
 }
 
+var mouse_down = false;
+function clickmeMouseMoveHandler() {
+  return function(event) {
+    if (mouse_down) {
+      var pos = screentopos(event.pageX, event.pageY);
+      settileat(pos.x, pos.y, cur_tile);
+      redrawmap();
+    }
+  }
+}
+
 function redrawmap() {
   var elt = document.getElementById('map');
   elt.innerHTML = '';
@@ -160,8 +171,14 @@ function redrawmap() {
     }
   }
   var clickme = DIV('clickme', elt);
-  // clickme.onmousemove = mouseMoveHandler();
+  clickme.onmousedown = function() {
+    mouse_down = true;
+  };
+  clickme.onmouseup = function() {
+    mouse_down = false;
+  }
   clickme.onclick = clickmeClickHandler();
+  clickme.onmousemove = clickmeMouseMoveHandler();
 }
 
 var cur_tile = 1;
