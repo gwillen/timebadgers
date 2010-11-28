@@ -17,7 +17,7 @@ import flash.events.KeyboardEvent;
 import Simulate;
 
 class Game {
-  static var rootmc : MovieClip;
+  public static var rootmc : MovieClip;
   public static var mainmc : MovieClip;
   static var debugtf : TextField;  
 
@@ -45,17 +45,15 @@ class Game {
       debugtf = new TextField();
       debugtf.width = 600;
       debugtf.height = 600;
+
+      //flash.Lib.setErrorHandler(Utils.myHandler);
+
+      World.loadStuff();
+      //World.initDrawWorld();
       rootmc.addChild(mainmc);
       rootmc.addChild(debugtf);
       mainmc.stage.addEventListener(MouseEvent.MOUSE_DOWN, handleclick );
       mainmc.stage.addEventListener(KeyboardEvent.KEY_DOWN, handlekeydown );
-
-      //flash.Lib.setErrorHandler(Utils.myHandler);
-
-      // 1. Read in the level file
-      // 2. Parse it into arrays of tiles
-      World.loadStuff();
-      //World.initDrawWorld();
 
       // Not actually gonna draw tiles here. Right now we are drawing them from
       // loadStuff. Ugh.
