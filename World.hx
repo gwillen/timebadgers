@@ -16,6 +16,13 @@ typedef Coor = {
 
 class World {
   public static var tile:Array<Ref<Loader>>;
+  // These are indices into the tile array.
+  public static var NOTHING : Int = 0;
+  public static var WALL : Int = 14;
+  public static var MOVEDOWN : Int = 10;
+  public static var MOVELEFT : Int = 11;
+  public static var MOVERIGHT : Int = 12;
+  public static var MOVEUP : Int = 13;
 
   public static function loadStuff() {
     tileStyles = new Array<TileStyle>();
@@ -61,12 +68,12 @@ class World {
   }
 
   // game parameters
-  static var screenw:Int = 600;
-  static var screenh:Int = 600;
+  public static var screenw:Int = 600;
+  public static var screenh:Int = 600;
   
   public static var tilesize:Int = Tile.size;
-  static var tilesh = Math.round(screenh/tilesize);
-  static var tilesw = Math.round(screenw/tilesize);
+  public static var tilesh = Math.round(screenh/tilesize);
+  public static var tilesw = Math.round(screenw/tilesize);
 
 /*
   public static function initTiles () {

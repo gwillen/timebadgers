@@ -3,12 +3,6 @@ import Jump;
 import flash.display.Sprite;
 import flash.display.Bitmap;
 
-typedef StepResult {
-  var world: World_t;
-  var badger_died: Bool;
-  var badger_on_floor: Bool;
-}
-
 class Simulate {
 
  /* 
@@ -19,10 +13,81 @@ class Simulate {
  2x  Bm7 Em Bm7 Amaj 9
  */
 
+  public static function get(w : World_t, x : Int, y : Int) : Tile {
+    if (x < 0 || x >= World.tilesw || y < 0 || y > World.tilesh) {
+      return World.AllTiles[World.WALL];
+    }
+    return w[y * World.tilesw + x];
+  }
+
+  public static function set(w : World_t, x : Int, y : Int, t : Tile) {
+    // XXX no bounds checks!
+    w[y * World.tilesw + x] = t;
+  }
+
  // Compute the next world state from the current one.
  public static function step(w : World_t) : World_t {
-   // var newworld = 
- }
+   // XXX should be same size as w; allegedly this allocates
+   // as fields are accessed.
+   var newworld = new Array<Tile>();
+   
+   for (y in 0...World.tilesw) {
+     for (x in 0...World.tilesh) {
+       var thistile = get(w, x, y);
+       switch (thistile.style.id) {
+       case 0x000a: // MOVEDOWN
+	 if (get(w, x - 1, y).style.prop.solid) {
+	   // Blocked; flip in place.
+	   set(newworld, x, y, World.AllTiles[World.MOVEUP]);
+	 } else {
+	   set(newworld, x, y + 1, thistile);
+	   set(newworld, x, y, World.AllTiles[World.NOTHING]);
+	 }
+       break;
+
+       case 0x000b: // MOVELEFT
+	 if (get(w, x - 1, y).style.prop.solid ||
+	     // because this is lexicographically before
+	     get(newworld, x - 1, y).style.prop.solid) {
+	   // Blocked; flip in place.
+	   set(newworld, x, y, World.AllTiles[World.MOVERIGHT]);
+	 } else {
+	   set(newworld, x - 1, y, thistile);
+	   set(newworld, x, y, World.AllTiles[World.NOTHING]);
+	 }
+       break;
+
+       case 0x000c: // MOVERIGHT
+	 if (get(w, x + 1, y).style.prop.solid) {
+	   // Blocked; flip in place.
+	   set(newworld, x, y, World.AllTiles[World.MOVELEFT]);
+	 } else {
+	   set(newworld, x + 1, y, thistile);
+	   set(newworld, x, y, World.AllTiles[World.NOTHING]);
+	 }
+       break;
+
+       case 0x000d: // MOVEDOWN
+	 if (get(w, x, y + 1).style.prop.solid ||
+	     // because this is lexicographically before
+	     get(newworld, x, y + 1).style.prop.solid) {
+	   // Blocked; flip in place.
+	   set(newworld, x, y, World.AllTiles[World.MOVEDOWN]);
+	 } else {
+	   set(newworld, x, y + 1, thistile);
+	   set(newworld, x, y, World.AllTiles[World.NOTHING]);
+	 }
+       break;
+
+     default:
+       set(newworld, x, y, thistile);
+
+       }
+     }
+   }
+
+  return newworld;
+}
 
 
  /* where can we jump if we start at {x,y} ?
