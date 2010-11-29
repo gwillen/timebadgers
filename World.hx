@@ -30,11 +30,12 @@ class World {
     tileStyles = new Array<TileStyle>();
     allTiles = new Array<Tile>();
     // Danger: This call is async.
-    LoadStuff.loadTileMap(tileStyles);
-    for (i in 0...tileStyles.length) {
-      allTiles[i] = new Tile();
-      allTiles[i].style = tileStyles[i];
-    }
+    LoadStuff.loadTileMap(tileStyles, function() {
+      for (i in 0...tileStyles.length) {
+        allTiles[i] = new Tile();
+        allTiles[i].style = tileStyles[i];
+      }
+    });
 
     LoadStuff.loadImageAndCall("background_nightsky.png", function(l) {
       Game.rootmc.addChildAt(l, 0);
