@@ -31,10 +31,19 @@ class Game {
   }
 
   static function handlekeydown(event : KeyboardEvent) {
-      debugtf.trace("you pushed this button: " + event + "\n"); 
+      debugtf.trace("you pushed this button: " + event.charCode + " " +
+      event.keyCode + "\n"); 
       if(event.charCode == 100){ // 'd'
          debugtf.visible = !debugtf.visible;
       }     
+      if(event.keyCode == 39) { // ->
+      // XXX make badger move right
+        trace("moveright");
+      }
+      if(event.keyCode == 37) { // <-
+      // XXX make badger move left
+        trace("moveleft");
+      }
   } 
 
   // XXX this will wrap stupidly and everything will be ruined forever
@@ -48,14 +57,14 @@ class Game {
     World.drawTheTiles(frame++);
 //    Simulate.drawMoves([{x:5,y:5}]);
     var badger_coord = World.findBadgers()[0]; //XXX
-    var bad_x = badger_coord.x;
-    var bad_y = badger_coord.y;
+    var badg_x = badger_coord.x;
+    var badg_y = badger_coord.y;
     var state0 = World.worldState;
     var state1 = World.worldState;
     var jump_dests = Utils.map(function(j:Jump.Jmp) { return j.dest; },
-                                Jump.validJumps(state0, state1, bad_x, bad_y));
+                                Jump.validJumps(state0, state1, badg_x, badg_y));
 //    jump_dests = [{x:5, y:5}];                                
-    Simulate.drawMovesRel(bad_x, bad_y, jump_dests);
+    Simulate.drawMovesRel(badg_x, badg_y, jump_dests);
   }
 
   static function main() {
