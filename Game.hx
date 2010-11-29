@@ -58,8 +58,14 @@ class Game {
     Simulate.drawMovesRel(bad_x, bad_y, jump_dests);
   }
 
+  private static function myTrace( v : Dynamic, ?inf : haxe.PosInfos ) {
+    debugtf.trace(v);
+  }
+
   static function main() {
     try {
+      haxe.Log.trace = myTrace;
+
       rootmc = flash.Lib.current;    
       mainmc = new MovieClip(); 
       mainmc.addEventListener(Event.ENTER_FRAME, mainLoop);

@@ -28,8 +28,11 @@ class LoadStuff {
     trace("a");
   }
 
-  public static function loadTileMap(styles : Array<TileStyle>) {
-    loadTextFileAndCall("TILEMAP", function (x) { processTileMap(x, styles); });
+  public static function loadTileMap(styles : Array<TileStyle>, ?cb) {
+    loadTextFileAndCall("TILEMAP", function (x) {
+      processTileMap(x, styles);
+      if (cb != null) { cb(); }
+    });
   }
 
   public static function processTileMap(tilemap : String, tilestyles : Array<TileStyle>) {
