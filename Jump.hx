@@ -124,7 +124,8 @@ class Jump extends Sprite {
              r = false;
         }
 
-        if(World.isBlocked(w1, x + j.dest.x, y + j.dest.y))
+        if(World.isBlocked(w1, x + j.dest.x, y + j.dest.y)){ r = false; }
+
         for(p in j.path){
            if(World.isBlocked(w0, p.x + x, p.y + y)){
                 r = false;

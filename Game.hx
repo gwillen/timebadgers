@@ -83,7 +83,7 @@ class Game {
     // trace('drawthetiles:');
     World.drawTheTiles(frame++);
 //    var badger_coord = World.findBadgers()[0]; //XXX
-    var badger_coord = World.findAndRemoveBadgers(World.worldState)[1]; //XXX
+    var badger_coord = World.findAndRemoveBadgers(World.worldState)[0]; //XXX
     var badg_x = badger_coord.x;
     var badg_y = badger_coord.y;
     //trace ("badger x = " + badg_x + " and y = " + badg_y);
