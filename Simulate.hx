@@ -262,7 +262,7 @@ class Simulate {
  static function drawMove(mv: Coor){
         var s = new Sprite();
         s.x = mv.x * World.tilesize + World.tilesize / 2;
-        s.y = mv.y * World.tilesize + World.tilesize / 2; // 12-pixel overlap zone
+        s.y = mv.y * World.tilesize + World.tilesize / 2; 
         s.graphics.beginFill(0x0000FF);
         s.graphics.drawCircle(0,0,7);
         s.graphics.endFill();
