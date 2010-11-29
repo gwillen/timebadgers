@@ -65,10 +65,10 @@ class World {
   public static var allTiles : Array<Tile>;
 
   public static function findAndRemoveBadgers(world : Array<Tile>) : Array<Coor> {
-    tileCoords
     for (i in 0...world.length) {
       var c = tileCoords(i);
     }
+    return new Array<Coor>();
   }
 
   public static function drawTheTiles(frame : Int) {
