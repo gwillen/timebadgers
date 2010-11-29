@@ -174,6 +174,10 @@ class World {
     return worldState[tileIndex(x, y)];
   }
 
+  public static function getTileW(w: World_t, x:Int, y:Int) : Tile {
+    return w[tileIndex(x, y)];
+  }
+
   public static function setTile(x:Int, y:Int, t:Tile) {
     worldState[y*tilesw + x] = t;
   }
@@ -184,7 +188,7 @@ class World {
     if (x < 0 || x >= tilesw || y < 0 || y >= tilesh) {
       return true;
     } else {
-      return getTile(x, y).style.prop.solid;
+      return getTileW(w,x, y).style.prop.solid;
     }
   }
 
@@ -194,7 +198,7 @@ class World {
     if (x < 0 || x >= tilesw || y < 0 || y >= tilesh) {
       return false;
     } else {
-      return getTile(x, y).style.prop.standon;
+      return getTileW(w,x, y).style.prop.standon;
     }
   }
 
