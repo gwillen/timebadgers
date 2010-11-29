@@ -21,7 +21,7 @@ class Simulate {
 
  // Compute the next world state from the current one.
  public static function step(w : World_t) : World_t {
-   var newworld = 
+   // var newworld = 
  }
 
 
