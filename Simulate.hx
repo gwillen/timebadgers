@@ -221,7 +221,6 @@ class Simulate {
    }
 
    // Pass 3: Conveyors move material.
-/*
    for (y in 0...World.tilesh) {
      for (x in 0...World.tilesw) {
        var thistile = get(w, x, y);
@@ -234,12 +233,22 @@ class Simulate {
 	     set(newworld, x - 1, y - 1, above);
 	   }
 	 }
-       } else if (this.style.id == World.CONVEYORR) {
-	 
+
+       } else if (thistile.style.id == World.CONVEYORR) {
+	 // Is the thing atop me conveyed?
+	 var above = get(newworld, x, y - 1);
+	 if (above.style.prop.conveyed) {
+	   if (clearThere(newworld, newworld, x + 1, y - 1)) {
+	     set(newworld, x, y - 1, World.allTiles[World.NOTHING]);
+	     set(newworld, x + 1, y - 1, above);
+	   }
+	 }
        }
      }
    }
-*/
+
+   // XXX DEATHS!
+
    trace('return: ' + newworld.length);
   return newworld;
 }
