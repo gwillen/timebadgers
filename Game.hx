@@ -82,6 +82,8 @@ class Game {
         !World.tilesLoaded) {
       return;
     }
+
+    Achievements.tick();
     // trace('clearthetiles:');
     World.clearTheTiles();
     // trace('drawthetiles:');
