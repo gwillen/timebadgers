@@ -120,10 +120,11 @@ class Jump extends Sprite {
 
   public static function canJump(j:Jmp, w0: World_t, w1: World_t, x: Int, y: Int): Bool {
        var r: Bool = true;
-        if(! World.canStandOn(w1, j.dest.x + x, j.dest.y + y)){
+        if(! World.canStandOn(w1, j.dest.x + x, j.dest.y + y + 1 )){
              r = false;
         }
 
+        if(World.isBlocked(w1, x + j.dest.x, y + j.dest.y))
         for(p in j.path){
            if(World.isBlocked(w0, p.x + x, p.y + y)){
                 r = false;
@@ -132,6 +133,7 @@ class Jump extends Sprite {
 
         return r;
   }
+
 
   public static function validJumps(w0: World_t, w1: World_t, x: Int, y: Int)
   : Array<Jmp> {

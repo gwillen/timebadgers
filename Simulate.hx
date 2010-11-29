@@ -201,7 +201,7 @@ class Simulate {
   // Draw an array of moves |mvs| which are relative to the player's position |x,y|.
  public static function drawMovesRel(player_x:Int, player_y:Int, mvs:Array<Coor>) {
    var newmvs = Utils.map(function(c) {
-                      return {x : c.x + player_x, y : c.y + player_y - 1};
+                      return {x : c.x + player_x, y : c.y + player_y};
                      },
                      mvs);
    drawMoves(newmvs);                    
