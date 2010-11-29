@@ -64,10 +64,15 @@ class World {
   public static var allTiles : Array<Tile>;
 
   public static function findAndRemoveBadgers(world : Array<Tile>) : Array<Coor> {
+    var rv : Array<Coor> = new Array<Coor>();
     for (i in 0...world.length) {
       var c = tileCoords(i);
+      if (world[i].style.prop.isbadger) {
+        world[i].style = tileStyles[0];  // empty tile XXX
+        rv.push(c);
+      }
     }
-    return new Array<Coor>();
+    return rv;
   }
 
   public static function drawTheTiles(frame : Int) {
