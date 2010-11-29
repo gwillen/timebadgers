@@ -39,8 +39,8 @@ class Game {
       lastClick = event;
       debugtf.trace("you mousedowned at " + event.localX + " " + event.localY + "\n");
       // teleport the badget there
-      var tile_coord:Coor = {x : cast (event.localX / World.tilesize) , 
-                        y : cast (event.localY / World.tilesize)};
+      var tile_coord:Coor = {x : cast (event.stageX / World.tilesize) , 
+                        y : cast (event.stageY / World.tilesize)};
       trace ("teleporting to :" + Jump.stringofcoor(tile_coord));
       World.moveBadger(World.worldState, tile_coord.x, tile_coord.y);
   }
