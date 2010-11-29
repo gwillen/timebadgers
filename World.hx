@@ -161,6 +161,7 @@ class TileStyle {
   public var frames : Array<TileFrame>;
   public var totalFrames : Int;  // Sum of all frames[i].delay
   public var prop : TileProperties;
+  public var id : Int;
 }
 
 class Tile {

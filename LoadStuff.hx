@@ -47,6 +47,7 @@ class LoadStuff {
       var id = Utils.parseHex(words.shift());
       var bitsstr = words.shift();
       style.prop = new TileProperties(bitsstr);
+      style.id = id;
       // XXX need to use the bitstr
       while (words.length > 0) {
         var filename = words.shift();
