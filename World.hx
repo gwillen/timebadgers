@@ -26,15 +26,19 @@ class World {
   public static var TURTLEL : Int = 0x0001;
   public static var TURTLER : Int = 0x0002;
 
+  public static var tilesLoaded : Bool = false;
+
   public static function loadStuff() {
     tileStyles = new Array<TileStyle>();
     allTiles = new Array<Tile>();
     // Danger: This call is async.
+
     LoadStuff.loadTileMap(tileStyles, function() {
       for (i in 0...tileStyles.length) {
         allTiles[i] = new Tile();
         allTiles[i].style = tileStyles[i];
-      }
+	tilesLoaded = true;
+        }
     });
 
     LoadStuff.loadImageAndCall("background_nightsky.png", function(l) {
@@ -43,7 +47,7 @@ class World {
 
     // Also async
     worldState = new Array<Tile>();
-    LoadStuff.loadLevel("has_badger.map", worldState);
+    LoadStuff.loadLevel("skyline1.map", worldState);
 
     // call initTiles when the loading is all completed. XXX: it is no longer
     // really necessary to do this in this order, since all our logic is in
@@ -112,13 +116,17 @@ class World {
     for (y in 0...tilesh) {
       for (x in 0...tilesw) {
         var thistile:Tile = getTile(x, y);
-        var tileb = thistile.getImage(frame, x, y);
-        var b = new Bitmap(tileb);
-        var s = new Sprite();
-        s.x = x * tilesize;
-        s.y = y * tilesize - 12; // 12-pixel overlap zone
-        s.addChild(b);
-        Game.mainmc.addChild(s);
+	if (thistile == null) {
+	// 	  trace('NULL ASSHOLE');
+	} else {
+	  var tileb = thistile.getImage(frame, x, y);
+	  var b = new Bitmap(tileb);
+	  var s = new Sprite();
+	  s.x = x * tilesize;
+	  s.y = y * tilesize - 12; // 12-pixel overlap zone
+	  s.addChild(b);
+	  Game.mainmc.addChild(s);
+ 	}
       }
     }
   }

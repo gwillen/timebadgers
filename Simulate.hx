@@ -28,7 +28,11 @@ class Simulate {
 
   public static function set(w : World_t, x : Int, y : Int, t : Tile) {
     // XXX no bounds checks!
-    w[y * World.tilesw + x] = t;
+    if (x < 0 || x >= World.tilesw || y < 0 || y > World.tilesh) {
+      trace('OOB ASSHOLE');
+    } else {
+      w[y * World.tilesw + x] = t;
+    }
   }
 
  // Compute the next world state from the current one.
@@ -36,20 +40,33 @@ class Simulate {
    // XXX should be same size as w; allegedly this allocates
    // as fields are accessed.
    var newworld = new Array<Tile>();
+   // trace('make step!');
+   for (y in 0...World.tilesh) {
+     for (x in 0...World.tilesw) {
+       newworld.push(World.allTiles[World.NOTHING]);
+     }
+   }
    
-   for (y in 0...World.tilesw) {
-     for (x in 0...World.tilesh) {
+   for (y in 0...World.tilesh) {
+     for (x in 0...World.tilesw) {
        var thistile = get(w, x, y);
+       if (thistile == null) {
+	 trace('null ASSHOLE2');
+       }
+
        switch (thistile.style.id) {
+       case 0x0000: // NOTHING
+	 // Don't do anything, because we don't want to overwrite
+	 // new material that moved into this spot.
+	 
        case 0x000a: // MOVEDOWN
-	 if (get(w, x - 1, y).style.prop.solid) {
+	 if (get(w, x, y + 1).style.prop.solid) {
 	   // Blocked; flip in place.
 	   set(newworld, x, y, World.allTiles[World.MOVEUP]);
 	 } else {
 	   set(newworld, x, y + 1, thistile);
 	   set(newworld, x, y, World.allTiles[World.NOTHING]);
 	 }
-       break;
 
        case 0x000b: // MOVELEFT
 	 if (get(w, x - 1, y).style.prop.solid ||
@@ -61,7 +78,6 @@ class Simulate {
 	   set(newworld, x - 1, y, thistile);
 	   set(newworld, x, y, World.allTiles[World.NOTHING]);
 	 }
-       break;
 
        case 0x000c: // MOVERIGHT
 	 if (get(w, x + 1, y).style.prop.solid) {
@@ -71,50 +87,58 @@ class Simulate {
 	   set(newworld, x + 1, y, thistile);
 	   set(newworld, x, y, World.allTiles[World.NOTHING]);
 	 }
-       break;
 
-       case 0x000d: // MOVEDOWN
-	 if (get(w, x, y + 1).style.prop.solid ||
+       case 0x000d: // MOVEUP
+	 if (get(w, x, y - 1).style.prop.solid ||
 	     // because this is lexicographically before
-	     get(newworld, x, y + 1).style.prop.solid) {
+	     get(newworld, x, y - 1).style.prop.solid) {
 	   // Blocked; flip in place.
 	   set(newworld, x, y, World.allTiles[World.MOVEDOWN]);
 	 } else {
-	   set(newworld, x, y + 1, thistile);
+	   set(newworld, x, y - 1, thistile);
 	   set(newworld, x, y, World.allTiles[World.NOTHING]);
 	 }
-       break;
 
        case 0x0001: // TURTLE L
+	 trace(' i am turtle ');
          if (get(w, x - 1, y).style.prop.isbadger ||
 	     (!get(w, x - 1, y).style.prop.solid &&
               !get(newworld, x - 1, y).style.prop.solid)) {
-	   // Might kill badger.
+	   // Might kill badger!
+	   trace('the turtle moves');
+	   trace('It is: ' + World.NOTHING);
+	   var noth = World.allTiles[World.NOTHING];
+	   trace('I got: ' + noth);
 	   set(newworld, x - 1, y, thistile);
-	   set(newworld, x, y, World.allTiles[World.NOTHING]);
+	   set(newworld, x, y, noth);
 	 } else {
 	   // Flip in place.
+	   trace('flip out!');
 	   set(newworld, x, y, World.allTiles[World.TURTLER]);
 	 }
 
        case 0x0002: // TURTLE R
+	 trace('\nturtler! ');
          if (get(w, x + 1, y).style.prop.isbadger ||
 	     !get(w, x + 1, y).style.prop.solid) {
-	   // Might kill badger.
+	   // Might kill badger!
+	   trace('might\n');
 	   set(newworld, x + 1, y, thistile);
 	   set(newworld, x, y, World.allTiles[World.NOTHING]);
+	   trace('ok\n');
 	 } else {
 	   // Flip in place.
+	   trace('lsip\n');
 	   set(newworld, x, y, World.allTiles[World.TURTLEL]);
 	 }
 
        default:
 	 set(newworld, x, y, thistile);
-	 break;
        }
      }
    }
 
+   trace('return: ' + newworld.length);
   return newworld;
 }
 
