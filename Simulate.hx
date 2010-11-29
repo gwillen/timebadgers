@@ -85,9 +85,32 @@ class Simulate {
 	 }
        break;
 
-     default:
-       set(newworld, x, y, thistile);
+       case 0x0001: // TURTLE L
+         if (get(w, x - 1, y).style.prop.isbadger ||
+	     (!get(w, x - 1, y).style.prop.solid &&
+              !get(newworld, x - 1, y).style.prop.solid)) {
+	   // Might kill badger.
+	   set(newworld, x - 1, y, thistile);
+	   set(newworld, x, y, World.allTiles[World.NOTHING]);
+	 } else {
+	   // Flip in place.
+	   set(newworld, x, y, World.allTiles[World.TURTLER]);
+	 }
 
+       case 0x0002: // TURTLE R
+         if (get(w, x + 1, y).style.prop.isbadger ||
+	     !get(w, x + 1, y).style.prop.solid) {
+	   // Might kill badger.
+	   set(newworld, x + 1, y, thistile);
+	   set(newworld, x, y, World.allTiles[World.NOTHING]);
+	 } else {
+	   // Flip in place.
+	   set(newworld, x, y, World.allTiles[World.TURTLEL]);
+	 }
+
+       default:
+	 set(newworld, x, y, thistile);
+	 break;
        }
      }
    }

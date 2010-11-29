@@ -23,6 +23,8 @@ class World {
   public static var MOVELEFT : Int = 11;
   public static var MOVERIGHT : Int = 12;
   public static var MOVEUP : Int = 13;
+  public static var TURTLEL : Int = 0x0001;
+  public static var TURTLER : Int = 0x0002;
 
   public static function loadStuff() {
     tileStyles = new Array<TileStyle>();
@@ -188,9 +190,13 @@ class TileProperties {
   public function new(bits : String) {
     standon = Utils.parseBool(bits.charAt(0));
     solid = Utils.parseBool(bits.charAt(1));
+    isbadger = Utils.parseBool(bits.charAt(2));
+    isturtle = Utils.parseBool(bits.charAt(3));
   }
   public var standon : Bool;
   public var solid : Bool;
+  public var isbadger : Bool;
+  public var isturtle : Bool;
 }
 
 class TileStyle {
