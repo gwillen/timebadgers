@@ -41,21 +41,32 @@ class Game {
   static var frame : Int = 0;
   static function mainLoop(e : Event) {
     // race condition lol
+    // trace('mainloop:');
     if (!LoadStuff.loadsDone()) {
       return;
     }
+    // trace('clearthetiles:');
     World.clearTheTiles();
+    // trace('drawthetiles:');
     World.drawTheTiles(frame++);
 //    Simulate.drawMoves([{x:5,y:5}]);
+    // trace('findbadgers:');
     var badger_coord = World.findBadgers()[0]; //XXX
     var bad_x = badger_coord.x;
     var bad_y = badger_coord.y;
     var state0 = World.worldState;
     var state1 = World.worldState;
     var jump_dests = Utils.map(function(j:Jump.Jmp) { return j.dest; },
-                                Jump.validJumps(state0, state1, bad_x, bad_y));
+    		               Jump.validJumps(state0, state1, bad_x, bad_y));
+    // trace('drawmovesrel:');
 //    jump_dests = [{x:5, y:5}];                                
     Simulate.drawMovesRel(bad_x, bad_y, jump_dests);
+
+    // This is retardo I am sorry
+    if ((frame % 5) == 0) {
+      World.worldState = Simulate.step(World.worldState);
+    }
+    // trace(":mainloop");
   }
 
   static function main() {

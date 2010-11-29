@@ -31,8 +31,9 @@ class World {
     allTiles = new Array<Tile>();
     // Danger: This call is async.
     LoadStuff.loadTileMap(tileStyles);
+
     for (i in 0...tileStyles.length) {
-      allTiles[i] = new Tile();
+      allTiles.push(new Tile());
       allTiles[i].style = tileStyles[i];
     }
 
@@ -106,13 +107,17 @@ class World {
     for (y in 0...tilesh) {
       for (x in 0...tilesw) {
         var thistile:Tile = getTile(x, y);
-        var tileb = thistile.getImage(frame, x, y);
-        var b = new Bitmap(tileb);
-        var s = new Sprite();
-        s.x = x * tilesize;
-        s.y = y * tilesize - 12; // 12-pixel overlap zone
-        s.addChild(b);
-        Game.mainmc.addChild(s);
+	if (thistile == null) {
+	// 	  trace('NULL ASSHOLE');
+	} else {
+	  var tileb = thistile.getImage(frame, x, y);
+	  var b = new Bitmap(tileb);
+	  var s = new Sprite();
+	  s.x = x * tilesize;
+	  s.y = y * tilesize - 12; // 12-pixel overlap zone
+	  s.addChild(b);
+	  Game.mainmc.addChild(s);
+ 	}
       }
     }
   }
