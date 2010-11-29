@@ -43,7 +43,7 @@ class Simulate {
    // trace('make step!');
    for (y in 0...World.tilesh) {
      for (x in 0...World.tilesw) {
-       newworld.push(World.allTiles[0x0024]);
+       newworld.push(World.allTiles[World.NOTHING]);
      }
    }
    
@@ -55,6 +55,10 @@ class Simulate {
        }
 
        switch (thistile.style.id) {
+       case 0x0000: // NOTHING
+	 // Don't do anything, because we don't want to overwrite
+	 // new material that moved into this spot.
+	 
        case 0x000a: // MOVEDOWN
 	 if (get(w, x, y + 1).style.prop.solid) {
 	   // Blocked; flip in place.
@@ -84,14 +88,14 @@ class Simulate {
 	   set(newworld, x, y, World.allTiles[World.NOTHING]);
 	 }
 
-       case 0x000d: // MOVEDOWN
-	 if (get(w, x, y + 1).style.prop.solid ||
+       case 0x000d: // MOVEUP
+	 if (get(w, x, y - 1).style.prop.solid ||
 	     // because this is lexicographically before
-	     get(newworld, x, y + 1).style.prop.solid) {
+	     get(newworld, x, y - 1).style.prop.solid) {
 	   // Blocked; flip in place.
 	   set(newworld, x, y, World.allTiles[World.MOVEDOWN]);
 	 } else {
-	   set(newworld, x, y + 1, thistile);
+	   set(newworld, x, y - 1, thistile);
 	   set(newworld, x, y, World.allTiles[World.NOTHING]);
 	 }
 
@@ -114,13 +118,17 @@ class Simulate {
 	 }
 
        case 0x0002: // TURTLE R
-         if (get(newworld, x + 1, y).style.prop.isbadger ||
+	 trace('\nturtler! ');
+         if (get(w, x + 1, y).style.prop.isbadger ||
 	     !get(w, x + 1, y).style.prop.solid) {
 	   // Might kill badger!
+	   trace('might\n');
 	   set(newworld, x + 1, y, thistile);
 	   set(newworld, x, y, World.allTiles[World.NOTHING]);
+	   trace('ok\n');
 	 } else {
 	   // Flip in place.
+	   trace('lsip\n');
 	   set(newworld, x, y, World.allTiles[World.TURTLEL]);
 	 }
 

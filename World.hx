@@ -26,16 +26,20 @@ class World {
   public static var TURTLEL : Int = 0x0001;
   public static var TURTLER : Int = 0x0002;
 
+  public static var tilesLoaded : Bool = false;
+
   public static function loadStuff() {
     tileStyles = new Array<TileStyle>();
     allTiles = new Array<Tile>();
     // Danger: This call is async.
-    LoadStuff.loadTileMap(tileStyles);
 
-    for (i in 0...tileStyles.length) {
-      allTiles.push(new Tile());
-      allTiles[i].style = tileStyles[i];
-    }
+    LoadStuff.loadTileMap(tileStyles, function() {
+      for (i in 0...tileStyles.length) {
+        allTiles[i] = new Tile();
+        allTiles[i].style = tileStyles[i];
+	tilesLoaded = true;
+        }
+    });
 
     LoadStuff.loadImageAndCall("background_nightsky.png", function(l) {
       Game.rootmc.addChildAt(l, 0);
@@ -43,7 +47,7 @@ class World {
 
     // Also async
     worldState = new Array<Tile>();
-    LoadStuff.loadLevel("has_badger.map", worldState);
+    LoadStuff.loadLevel("skyline1.map", worldState);
 
     // call initTiles when the loading is all completed. XXX: it is no longer
     // really necessary to do this in this order, since all our logic is in
@@ -67,10 +71,15 @@ class World {
   public static var allTiles : Array<Tile>;
 
   public static function findAndRemoveBadgers(world : Array<Tile>) : Array<Coor> {
+    var rv : Array<Coor> = new Array<Coor>();
     for (i in 0...world.length) {
       var c = tileCoords(i);
+      if (world[i].style.prop.isbadger) {
+        world[i].style = tileStyles[0];  // empty tile XXX
+        rv.push(c);
+      }
     }
-    return new Array<Coor>();
+    return rv;
   }
 
   public static function drawTheTiles(frame : Int) {

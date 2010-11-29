@@ -42,7 +42,8 @@ class Game {
   static function mainLoop(e : Event) {
     // race condition lol
     // trace('mainloop:');
-    if (!LoadStuff.loadsDone()) {
+    if (!LoadStuff.loadsDone() ||
+        !World.tilesLoaded) {
       return;
     }
     // trace('clearthetiles:');
@@ -69,8 +70,14 @@ class Game {
     // trace(":mainloop");
   }
 
+  private static function myTrace( v : Dynamic, ?inf : haxe.PosInfos ) {
+    debugtf.trace(v);
+  }
+
   static function main() {
     try {
+      haxe.Log.trace = myTrace;
+
       rootmc = flash.Lib.current;    
       mainmc = new MovieClip(); 
       mainmc.addEventListener(Event.ENTER_FRAME, mainLoop);
