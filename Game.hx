@@ -50,10 +50,14 @@ class Game {
   static var frame : Int = 0;
   static function mainLoop(e : Event) {
     // race condition lol
-    if (!LoadStuff.loadsDone()) {
+    // trace('mainloop:');
+    if (!LoadStuff.loadsDone() ||
+        !World.tilesLoaded) {
       return;
     }
+    // trace('clearthetiles:');
     World.clearTheTiles();
+    // trace('drawthetiles:');
     World.drawTheTiles(frame++);
 //    var badger_coord = World.findBadgers()[0]; //XXX
     var badger_coord = World.findAndRemoveBadgers(World.worldState)[0]; //XXX
@@ -66,6 +70,11 @@ class Game {
                                 Jump.validJumps(state0, state1, badg_x, badg_y));
 //    jump_dests = [{x:5, y:5}];                                
     Simulate.drawMovesRel(badg_x, badg_y, jump_dests);
+
+    // This is retardo -- you need to do this as part of PROPOSAL X.
+    if ((frame % 5) == 0) {
+      World.worldState = Simulate.step(World.worldState);
+    }
   }
 
   private static function myTrace( v : Dynamic, ?inf : haxe.PosInfos ) {
