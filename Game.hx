@@ -17,6 +17,12 @@ import flash.events.KeyboardEvent;
 
 import Simulate;
 
+enum GameState {
+  initialization;
+  titleScreen;
+  gamePlay;
+}
+
 class Game {
 
   public static var WORLD_HEIGHT = 600;
@@ -24,43 +30,85 @@ class Game {
 
   public static var rootmc : MovieClip;
   public static var mainmc : MovieClip;
+  public static var backgroundmc : MovieClip;
   public static var debugtf : DebugTextField;  
 
+  public static var lastClick;
   static function handleclick(event : MouseEvent) {
+      lastClick = event;
       debugtf.trace("you mousedowned at " + event.localX + " " + event.localY + "\n");
+      // teleport the badget there
+      // XXX write this var tile_coord = whichTile(event.localX, even.localY);
+      var tile_coord = {x : 5, y : 5};
+      World.moveBadger(World.worldState, tile_coord.x, tile_coord.y);
   }
 
+  public static var lastKey;
   static function handlekeydown(event : KeyboardEvent) {
-      debugtf.trace("you pushed this button: " + event + "\n"); 
+      lastKey = event;
+      debugtf.trace("you pushed this button: " + event.charCode + " " +
+      event.keyCode + "\n"); 
       if(event.charCode == 100){ // 'd'
          debugtf.visible = !debugtf.visible;
       }     
+      if(event.keyCode == 39) { // ->
+      // XXX make badger move right
+        trace("moveright");
+      }
+      if(event.keyCode == 37) { // <-
+      // XXX make badger move left
+        trace("moveleft");
+      }
   } 
 
   // XXX this will wrap stupidly and everything will be ruined forever
   static var frame : Int = 0;
   static function mainLoop(e : Event) {
     // race condition lol
-    if (!LoadStuff.loadsDone()) {
+    //trace('mainloop:');
+    if (gamestate == initialization) {
+      return;
+    } else if (gamestate == titleScreen) {
+      if (lastClick == null && lastKey == null) {
+        return;
+      } else {
+        gamestate = GameState.gamePlay;
+        startGame();
+        return;
+      }
+    }
+
+    if (!LoadStuff.loadsDone() ||
+        !World.tilesLoaded) {
       return;
     }
+    // trace('clearthetiles:');
     World.clearTheTiles();
+    // trace('drawthetiles:');
     World.drawTheTiles(frame++);
-//    Simulate.drawMoves([{x:5,y:5}]);
-    var badger_coord = World.findBadgers()[0]; //XXX
-    var bad_x = badger_coord.x;
-    var bad_y = badger_coord.y;
+//    var badger_coord = World.findBadgers()[0]; //XXX
+    var badger_coord = World.findAndRemoveBadgers(World.worldState)[0]; //XXX
+    var badg_x = badger_coord.x;
+    var badg_y = badger_coord.y;
+    //trace ("badger x = " + badg_x + " and y = " + badg_y);
     var state0 = World.worldState;
     var state1 = World.worldState;
     var jump_dests = Utils.map(function(j:Jump.Jmp) { return j.dest; },
-                                Jump.validJumps(state0, state1, bad_x, bad_y));
+                                Jump.validJumps(state0, state1, badg_x, badg_y));
 //    jump_dests = [{x:5, y:5}];                                
-    Simulate.drawMovesRel(bad_x, bad_y, jump_dests);
+    Simulate.drawMovesRel(badg_x, badg_y, jump_dests);
+
+    // This is retardo -- you need to do this as part of PROPOSAL X.
+    if ((frame % 5) == 0) {
+      World.worldState = Simulate.step(World.worldState);
+    }
   }
 
   private static function myTrace( v : Dynamic, ?inf : haxe.PosInfos ) {
-    debugtf.trace(v);
+    debugtf.trace(v+"\n");
   }
+
+  public static var gamestate = initialization;
 
   static function main() {
     try {
@@ -68,30 +116,37 @@ class Game {
 
       rootmc = flash.Lib.current;    
       mainmc = new MovieClip(); 
+      backgroundmc = new MovieClip();
       mainmc.addEventListener(Event.ENTER_FRAME, mainLoop);
       debugtf = new DebugTextField();
-
-
-
-
-      //flash.Lib.setErrorHandler(Utils.myHandler);
-
-      World.loadStuff();
-      //World.initDrawWorld();
+      rootmc.addChild(backgroundmc);
       rootmc.addChild(mainmc);
       rootmc.addChild(debugtf);
       mainmc.stage.addEventListener(MouseEvent.MOUSE_DOWN, handleclick );
       mainmc.stage.addEventListener(KeyboardEvent.KEY_DOWN, handlekeydown );
 
-      // Not actually gonna draw tiles here. Right now we are drawing them from
-      // loadStuff. Ugh.
-      //initTiles();
-      //drawTiles(tiles);
-  //    flash.ui.Mouse.cursor.show();
-     } catch ( s : String ) {
-       trace("Exception (String): " + s);
-     } catch ( unknown : Dynamic ) {
-       trace("Exception (Dynamic): " + Std.string(unknown));
-     }
-   }
+      LoadStuff.loadImageAndCall("title.png", function(l) {
+        Game.setBackground(l);
+      });
+
+      gamestate = titleScreen;
+      //flash.Lib.setErrorHandler(Utils.myHandler);
+    } catch ( s : String ) {
+      trace("Exception (String): " + s);
+    } catch ( unknown : Dynamic ) {
+      trace("Exception (Dynamic): " + Std.string(unknown));
+    }
+  }  
+
+  public static function setBackground(l:flash.display.DisplayObject) {
+    while (backgroundmc.numChildren > 0) {
+      backgroundmc.removeChildAt(0);
+    }
+    backgroundmc.addChild(l);
+  }
+
+  static function startGame() {
+    Achievements.init();
+    World.loadStuff();
+  }
 }

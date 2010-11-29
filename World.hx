@@ -25,25 +25,31 @@ class World {
   public static var MOVEUP : Int = 13;
   public static var TURTLEL : Int = 0x0001;
   public static var TURTLER : Int = 0x0002;
+  public static var TURTLELDEAD : Int = 0x0035;
+  public static var TURTLERDEAD : Int = 0x0036;
+
+  public static var tilesLoaded : Bool = false;
 
   public static function loadStuff() {
     tileStyles = new Array<TileStyle>();
     allTiles = new Array<Tile>();
     // Danger: This call is async.
+
     LoadStuff.loadTileMap(tileStyles, function() {
       for (i in 0...tileStyles.length) {
         allTiles[i] = new Tile();
         allTiles[i].style = tileStyles[i];
-      }
+	tilesLoaded = true;
+        }
     });
 
     LoadStuff.loadImageAndCall("background_nightsky.png", function(l) {
-      Game.rootmc.addChildAt(l, 0);
+      Game.setBackground(l);
     });
 
     // Also async
     worldState = new Array<Tile>();
-    LoadStuff.loadLevel("has_badger.map", worldState);
+    LoadStuff.loadLevel("skyline1.map", worldState);
 
     // call initTiles when the loading is all completed. XXX: it is no longer
     // really necessary to do this in this order, since all our logic is in
@@ -71,11 +77,38 @@ class World {
     for (i in 0...world.length) {
       var c = tileCoords(i);
       if (world[i].style.prop.isbadger) {
-        world[i].style = tileStyles[0];  // empty tile XXX
+        //world[i].style = tileStyles[0];  // empty tile XXX
         rv.push(c);
       }
     }
     return rv;
+  }
+
+  public static function moveBadger(world : World_t, new_x, new_y)
+  : Void {
+    var badger = Option.none;
+    for (i in 0...world.length) {
+      if ( world[i].style.prop.isbadger) {
+        badger = Option.some(world[i]);
+        world[i].style = tileStyles[0]; // empty tile
+        break;
+      }
+    }
+    /*
+    switch(badger) {
+      case some(t): {
+        trace("found a badger");
+        for (i in 0...world.length) {
+          if (new_x*30 + new_y == i) { // new badger location
+            world[i] = t;
+          }
+        }
+      }
+      default: {
+        trace("DID NOT FIND IT");
+      }
+    }
+    */
   }
 
   public static function drawTheTiles(frame : Int) {
@@ -112,13 +145,17 @@ class World {
     for (y in 0...tilesh) {
       for (x in 0...tilesw) {
         var thistile:Tile = getTile(x, y);
-        var tileb = thistile.getImage(frame, x, y);
-        var b = new Bitmap(tileb);
-        var s = new Sprite();
-        s.x = x * tilesize;
-        s.y = y * tilesize - 12; // 12-pixel overlap zone
-        s.addChild(b);
-        Game.mainmc.addChild(s);
+	if (thistile == null) {
+	// 	  trace('NULL ASSHOLE');
+	} else {
+	  var tileb = thistile.getImage(frame, x, y);
+	  var b = new Bitmap(tileb);
+	  var s = new Sprite();
+	  s.x = x * tilesize;
+	  s.y = y * tilesize - 12; // 12-pixel overlap zone
+	  s.addChild(b);
+	  Game.mainmc.addChild(s);
+ 	}
       }
     }
   }
@@ -159,10 +196,11 @@ class World {
     }
   }
 
-  //XXX stub
+  /*XXX dummy
   public static function findBadgers() :Array<{x:Int, y:Int}> {
     return [{x:4, y:11}];
   }
+  */
 
 }
 
