@@ -95,6 +95,7 @@ class Game {
 
       //flash.Lib.setErrorHandler(Utils.myHandler);
 
+      Achievements.init();
       World.loadStuff();
       //World.initDrawWorld();
       rootmc.addChild(mainmc);
