@@ -44,7 +44,7 @@ class World {
     });
 
     LoadStuff.loadImageAndCall("background_nightsky.png", function(l) {
-      Game.rootmc.addChildAt(l, 0);
+      Game.setBackground(l);
     });
 
     // Also async
