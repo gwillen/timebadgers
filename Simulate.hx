@@ -218,6 +218,7 @@ class Simulate {
         s.graphics.drawCircle(0,0,7);
         s.graphics.endFill();
         s.visible= true;
+        s.alpha = 0.5;
         Game.mainmc.addChild(s);    
  }
 
