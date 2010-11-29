@@ -51,7 +51,7 @@ class World {
 
     // Also async
     worldState = new Array<Tile>();
-    LoadStuff.loadLevel("skyline1.map", worldState);
+    LoadStuff.loadLevel("conveyorland.map", worldState);
 
     // call initTiles when the loading is all completed. XXX: it is no longer
     // really necessary to do this in this order, since all our logic is in
@@ -234,12 +234,14 @@ class TileProperties {
     isbadger = Utils.parseBool(bits.charAt(2));
     isturtle = Utils.parseBool(bits.charAt(3));
     conveyed = Utils.parseBool(bits.charAt(4));
+    falls = Utils.parseBool(bits.charAt(5));
   }
   public var standon : Bool;
   public var solid : Bool;
   public var isbadger : Bool;
   public var isturtle : Bool;
   public var conveyed : Bool;
+  public var falls : Bool;
 }
 
 class TileStyle {

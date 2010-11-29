@@ -1,6 +1,6 @@
 0000 0000000000000000 null 1
-0001 1101100000000000 char_turtlel.png 1
-0002 1101100000000000 char_turtler.png 1
+0001 1101110000000000 char_turtlel.png 1
+0002 1101110000000000 char_turtler.png 1
 0003 1100000000000000 tile_midbuilding.png 1
 0004 1100000000000000 tile_midbuildingl.png 1
 0005 1100000000000000 tile_midbuildingltop.png 1
@@ -33,7 +33,7 @@
 0020 1100000000000000 tile_column_right.png 1
 0021 1100000000000000 tile_capital_left.png 1
 0022 1100000000000000 tile_capital_right.png 1
-0023 1100100000000000 char_gloop1.png 20 char_gloop2.png 7
+0023 1100110000000000 char_gloop1.png 20 char_gloop2.png 7
 0024 1100000000000000 tile_dirt_1.png 1
 0025 1100000000000000 tile_dirt_2.png 1
 0026 1100000000000000 tile_gehry.png 1
@@ -48,12 +48,12 @@
 002f 1100000000000000 tile_rand_strut.png 1
 0030 1100000000000000 tile_pedestal_left.png 1
 0031 1100000000000000 tile_pedestal_right.png 1
-0032 1100100000000000 tile_conveyorl1.png 5 tile_conveyorl2.png 5 tile_conveyorl2.5.png 5 tile_conveyorl3.png 5 tile_conveyorl4.png 5
-0033 1100100000000000 tile_conveyorl4.png 5 tile_conveyorl3.png 5 tile_conveyorl2.5.png 5 tile_conveyorl2.png 5 tile_conveyorl1.png 5
-0034 1110100000000000 char_badgerr1.png 10 char_badgerr2.png 10
+0032 1100000000000000 tile_conveyorl1.png 5 tile_conveyorl2.png 5 tile_conveyorl2.5.png 5 tile_conveyorl3.png 5 tile_conveyorl4.png 5
+0033 1100000000000000 tile_conveyorl4.png 5 tile_conveyorl3.png 5 tile_conveyorl2.5.png 5 tile_conveyorl2.png 5 tile_conveyorl1.png 5
+0034 1110110000000000 char_badgerr1.png 10 char_badgerr2.png 10
 0035 1101100000000000 char_turtleldead.png 1
 0036 1101100000000000 char_turtlerdead.png 1
-0037 1100100000000000 char_rock.png 1
+0037 1100110000000000 char_rock.png 1
 0038 1100000000000000 tile_cloud1.png 1
 0039 1100000000000000 tile_cloud2.png 1
 003a 1100000000000000 tile_ivy1.png 1
@@ -64,3 +64,6 @@
 003f 1100000000000000 tile_olympus_right.png 1
 0040 1100000000000000 tile_olympus_center.png 1
 0041 1100000000000000 tile_olympus_left.png 1
+0042 1100110000000000 gwillen.png 1
+0043 1100110000000000 david.png 1
+0044 1100110000000000 chris.png 1
