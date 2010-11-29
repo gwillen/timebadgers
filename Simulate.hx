@@ -3,6 +3,12 @@ import Jump;
 import flash.display.Sprite;
 import flash.display.Bitmap;
 
+typedef StepResult {
+  var world: World_t;
+  var badger_died: Bool;
+  var badger_on_floor: Bool;
+}
+
 class Simulate {
 
  /* 
@@ -12,6 +18,11 @@ class Simulate {
   
  2x  Bm7 Em Bm7 Amaj 9
  */
+
+ // Compute the next world state from the current one.
+ public static function step(w : World_t) : World_t {
+   var newworld = 
+ }
 
 
  /* where can we jump if we start at {x,y} ?
