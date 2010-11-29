@@ -7,6 +7,17 @@ class Utils {
     return rv;
   }
 
+  public static function filter<T> (f : T -> Bool, l : Array<T>)
+  : Array<T> {
+    var l_ = new Array<T>();
+    for (it in l) {
+      if(f(it)) {
+        l_.push(it);
+      }
+    }
+    return l_;
+  }
+
   public static function halt() {
     while(true) {}
   }

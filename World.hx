@@ -26,8 +26,13 @@ class World {
 
   public static function loadStuff() {
     tileStyles = new Array<TileStyle>();
+    allTiles = new Array<Tile>();
     // Danger: This call is async.
     LoadStuff.loadTileMap(tileStyles);
+    for (i in 0...tileStyles.length) {
+      allTiles[i] = new Tile();
+      allTiles[i].style = tileStyles[i];
+    }
 
     LoadStuff.loadImageAndCall("background_nightsky.png", function(l) {
       Game.rootmc.addChildAt(l, 0);
@@ -35,7 +40,7 @@ class World {
 
     // Also async
     worldState = new Array<Tile>();
-    LoadStuff.loadLevel("skyline1.map", worldState);
+    LoadStuff.loadLevel("has_badger.map", worldState);
 
     // call initTiles when the loading is all completed. XXX: it is no longer
     // really necessary to do this in this order, since all our logic is in
@@ -55,7 +60,9 @@ class World {
   }
 
   static var worldState: World_t;
+  
   public static var tileStyles : Array<TileStyle>;
+  public static var allTiles : Array<Tile>;
 
   public static function drawTheTiles(frame : Int) {
     drawTiles(worldState, frame);

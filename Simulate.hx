@@ -15,7 +15,7 @@ class Simulate {
 
   public static function get(w : World_t, x : Int, y : Int) : Tile {
     if (x < 0 || x >= World.tilesw || y < 0 || y > World.tilesh) {
-      return World.AllTiles[World.WALL];
+      return World.allTiles[World.WALL];
     }
     return w[y * World.tilesw + x];
   }
@@ -38,10 +38,10 @@ class Simulate {
        case 0x000a: // MOVEDOWN
 	 if (get(w, x - 1, y).style.prop.solid) {
 	   // Blocked; flip in place.
-	   set(newworld, x, y, World.AllTiles[World.MOVEUP]);
+	   set(newworld, x, y, World.allTiles[World.MOVEUP]);
 	 } else {
 	   set(newworld, x, y + 1, thistile);
-	   set(newworld, x, y, World.AllTiles[World.NOTHING]);
+	   set(newworld, x, y, World.allTiles[World.NOTHING]);
 	 }
        break;
 
@@ -50,20 +50,20 @@ class Simulate {
 	     // because this is lexicographically before
 	     get(newworld, x - 1, y).style.prop.solid) {
 	   // Blocked; flip in place.
-	   set(newworld, x, y, World.AllTiles[World.MOVERIGHT]);
+	   set(newworld, x, y, World.allTiles[World.MOVERIGHT]);
 	 } else {
 	   set(newworld, x - 1, y, thistile);
-	   set(newworld, x, y, World.AllTiles[World.NOTHING]);
+	   set(newworld, x, y, World.allTiles[World.NOTHING]);
 	 }
        break;
 
        case 0x000c: // MOVERIGHT
 	 if (get(w, x + 1, y).style.prop.solid) {
 	   // Blocked; flip in place.
-	   set(newworld, x, y, World.AllTiles[World.MOVELEFT]);
+	   set(newworld, x, y, World.allTiles[World.MOVELEFT]);
 	 } else {
 	   set(newworld, x + 1, y, thistile);
-	   set(newworld, x, y, World.AllTiles[World.NOTHING]);
+	   set(newworld, x, y, World.allTiles[World.NOTHING]);
 	 }
        break;
 
@@ -72,10 +72,10 @@ class Simulate {
 	     // because this is lexicographically before
 	     get(newworld, x, y + 1).style.prop.solid) {
 	   // Blocked; flip in place.
-	   set(newworld, x, y, World.AllTiles[World.MOVEDOWN]);
+	   set(newworld, x, y, World.allTiles[World.MOVEDOWN]);
 	 } else {
 	   set(newworld, x, y + 1, thistile);
-	   set(newworld, x, y, World.AllTiles[World.NOTHING]);
+	   set(newworld, x, y, World.allTiles[World.NOTHING]);
 	 }
        break;
 
@@ -119,6 +119,16 @@ class Simulate {
    for(mv in mvs){
      drawMove(mv);
    }
+ }
+
+  // Draw an array of moves |mvs| which are relative to the player's position |x,y|.
+ public static function drawMovesRel(player_x:Int, player_y:Int, mvs:Array<Coor>) {
+   // XXX +?
+   var newmvs = Utils.map(function(c) {
+                      return {x : c.x + player_x, y : c.y + player_y};
+                     },
+                     mvs);
+   drawMoves(newmvs);                    
  }
 
 
