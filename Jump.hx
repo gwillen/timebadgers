@@ -133,6 +133,11 @@ class Jump extends Sprite {
         return r;
   }
 
+  public static function validJumps(w0: World_t, w1: World_t, x: Int, y: Int)
+  : Array<Jmp> {
+    return Utils.filter(function (j) { return canJump(j, w0, w1, x, y); }, jmps);
+  }
+
 
 
   static function main() {

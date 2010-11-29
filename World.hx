@@ -28,7 +28,7 @@ class World {
 
     // Also async
     worldState = new Array<Tile>();
-    LoadStuff.loadLevel("skyline1.map", worldState);
+    LoadStuff.loadLevel("has_badger.map", worldState);
 
     // call initTiles when the loading is all completed. XXX: it is no longer
     // really necessary to do this in this order, since all our logic is in
