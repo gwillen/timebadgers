@@ -77,7 +77,7 @@ class World {
     for (i in 0...world.length) {
       var c = tileCoords(i);
       if (world[i].style.prop.isbadger) {
-        //world[i].style = tileStyles[0];  // empty tile XXX
+          world[i] = allTiles[0];  // empty tile 
         rv.push(c);
       }
     }
