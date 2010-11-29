@@ -103,24 +103,23 @@ class World {
     worldState[y*tilesw + x] = t;
   }
 
+  // XXX
   // Must work on invalid coords; return true.
   public static function isBlocked(w: World_t, x:Int, y:Int) :Bool {
-   if (x < 0 || x >= tilesw || y < 0 || y >= tilesh) { return true;}
-    else    
-    return switch (getTile(x, y).type ) {   
-      case TileType.floor: true;
-      default : false;
+    if (x < 0 || x >= tilesw || y < 0 || y >= tilesh) {
+      return true;
+    } else {
+      return getTile(x, y).style.prop.solid;
     }
   }
 
-  // Must work on invalid coords; return true;
+  // XXX
+  // Must work on invalid coords; return false;
   public static function canStandOn(w: World_t, x:Int, y:Int) :Bool {
-   if (x < 0 || x >= tilesw || y < 0 || y >= tilesh) { return false;}
-    else    
-    return switch (getTile(x, y).type ) {   
-      case TileType.floor: true; 
-      //XXX also bridges
-      default : false;
+    if (x < 0 || x >= tilesw || y < 0 || y >= tilesh) {
+      return false;
+    } else {
+      return getTile(x, y).style.prop.standon;
     }
   }
 
@@ -148,21 +147,38 @@ class TileFrame {
   public var delay : Int;
 }
 
+class TileProperties {
+  public function new(bits : String) {
+    standon = Utils.parseBool(bits.charAt(0));
+    solid = Utils.parseBool(bits.charAt(1));
+  }
+  public var standon : Bool;
+  public var solid : Bool;
+}
+
 class TileStyle {
   public function new() {}
   public var frames : Array<TileFrame>;
-  public var standon : Bool;
-  public var solid : Bool;
+  public var totalFrames : Int;  // Sum of all frames[i].delay
+  public var prop : TileProperties;
+  public var id : Int;
 }
 
 class Tile {
   public function new() {}
   public static var size:Int = 20; // width and height
-  public var type:TileType;
+  //public var type:TileType;
   public var style:TileStyle;
   public function getImage(frame : Int, x : Int, y : Int) {
-    var animFrame = frame % style.frames.length;
-    return style.frames[animFrame].buf;
+    // Default animation mode is position-dependent
+    var animFrame = (frame+x+y) % style.totalFrames;
+    for (i in 0...style.frames.length) {
+      animFrame -= style.frames[i].delay;
+      if (animFrame < 0) {
+        return style.frames[i].buf;
+      }
+    }
+    throw("Malformed animation?");
     /*
     var styleNum : Int = Math.floor(Math.random() * World.tileStyles.length);
     try {

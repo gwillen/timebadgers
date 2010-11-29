@@ -1,0 +1,10 @@
+
+fun loop(start: world) =
+    let (world_1, badger_pos) = remove_badger(start)
+    let world_predicted = step(world_1)
+    let jumps = get_jumps(badger_pos, world_1, world_predicted)
+    // Might need all of above for display
+    let new_badger_pos = have_the_user_choose(jumps)
+    let world_2 = place_badger(world_1, new_badger_pos)
+    let next_world = step(world_2)
+    loop(start)

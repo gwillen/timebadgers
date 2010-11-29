@@ -46,6 +46,8 @@ class LoadStuff {
       var words : Array<String> = line.split(" ");
       var id = Utils.parseHex(words.shift());
       var bitsstr = words.shift();
+      style.prop = new TileProperties(bitsstr);
+      style.id = id;
       // XXX need to use the bitstr
       while (words.length > 0) {
         var filename = words.shift();
@@ -53,6 +55,7 @@ class LoadStuff {
         var frame : TileFrame = new TileFrame();
         style.frames.push(frame);
         frame.delay = Std.parseInt(delay);
+        style.totalFrames += frame.delay;
         frame.filename = filename;
         loadImageAndCall(filename, function (l) {
           var bitmap : Bitmap = cast l.content;
