@@ -35,6 +35,12 @@ class Simulate {
     }
   }
 
+  // If you are stepped on, then you are dead.
+  public static function steppedOn(w : World_t, x : Int, y : Int) {
+    var t = get(w, x, y - 1);
+    return t.style.prop.isbadger || t.style.prop.isturtle;
+  }
+
  // Compute the next world state from the current one.
  public static function step(w : World_t) : World_t {
    // XXX should be same size as w; allegedly this allocates
@@ -100,37 +106,55 @@ class Simulate {
 	 }
 
        case 0x0001: // TURTLE L
-	 trace(' i am turtle ');
+	 var xx : Int, yy : Int, deadtile : Int;
          if (get(w, x - 1, y).style.prop.isbadger ||
 	     (!get(w, x - 1, y).style.prop.solid &&
               !get(newworld, x - 1, y).style.prop.solid)) {
 	   // Might kill badger!
-	   trace('the turtle moves');
-	   trace('It is: ' + World.NOTHING);
 	   var noth = World.allTiles[World.NOTHING];
-	   trace('I got: ' + noth);
 	   set(newworld, x - 1, y, thistile);
 	   set(newworld, x, y, noth);
+	   xx = x - 1;
+	   yy = y;
+	   deadtile = World.TURTLELDEAD;
 	 } else {
 	   // Flip in place.
-	   trace('flip out!');
 	   set(newworld, x, y, World.allTiles[World.TURTLER]);
+	   xx = x;
+	   yy = y;
+	   deadtile = World.TURTLERDEAD;
+	 }
+
+	 if (steppedOn(w, xx, yy)) {
+	   set(newworld, xx, yy, World.allTiles[deadtile]);
 	 }
 
        case 0x0002: // TURTLE R
-	 trace('\nturtler! ');
+	 var xx : Int, yy : Int, deadtile : Int;
          if (get(w, x + 1, y).style.prop.isbadger ||
 	     !get(w, x + 1, y).style.prop.solid) {
 	   // Might kill badger!
-	   trace('might\n');
 	   set(newworld, x + 1, y, thistile);
 	   set(newworld, x, y, World.allTiles[World.NOTHING]);
-	   trace('ok\n');
+	   xx = x + 1;
+	   yy = y;
+	   deadtile = World.TURTLERDEAD;
 	 } else {
 	   // Flip in place.
-	   trace('lsip\n');
 	   set(newworld, x, y, World.allTiles[World.TURTLEL]);
+	   xx = x;
+	   yy = y;
+	   deadtile = World.TURTLELDEAD;
 	 }
+
+	 if (steppedOn(w, xx, yy)) {
+	   set(newworld, xx, yy, World.allTiles[deadtile]);
+	 }
+
+       case 0x0035: // Dead turtles
+	 set(newworld, x, y, World.allTiles[World.NOTHING]);
+       case 0x0036: // Dead turtles
+	 set(newworld, x, y, World.allTiles[World.NOTHING]);
 
        default:
 	 set(newworld, x, y, thistile);
@@ -176,9 +200,8 @@ class Simulate {
 
   // Draw an array of moves |mvs| which are relative to the player's position |x,y|.
  public static function drawMovesRel(player_x:Int, player_y:Int, mvs:Array<Coor>) {
-   // XXX +?
    var newmvs = Utils.map(function(c) {
-                      return {x : c.x + player_x, y : c.y + player_y};
+                      return {x : c.x + player_x, y : c.y + player_y - 1};
                      },
                      mvs);
    drawMoves(newmvs);                    
