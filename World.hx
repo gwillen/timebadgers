@@ -16,11 +16,23 @@ typedef Coor = {
 
 class World {
   public static var tile:Array<Ref<Loader>>;
+  // These are indices into the tile array.
+  public static var NOTHING : Int = 0;
+  public static var WALL : Int = 14;
+  public static var MOVEDOWN : Int = 10;
+  public static var MOVELEFT : Int = 11;
+  public static var MOVERIGHT : Int = 12;
+  public static var MOVEUP : Int = 13;
 
   public static function loadStuff() {
     tileStyles = new Array<TileStyle>();
+    allTiles = new Array<Tile>();
     // Danger: This call is async.
     LoadStuff.loadTileMap(tileStyles);
+    for (i in 0...tileStyles.length) {
+      allTiles[i] = new Tile();
+      allTiles[i].style = tileStyles[i];
+    }
 
     LoadStuff.loadImageAndCall("background_nightsky.png", function(l) {
       Game.rootmc.addChildAt(l, 0);
@@ -49,6 +61,14 @@ class World {
 
   public static var worldState: World_t;
   public static var tileStyles : Array<TileStyle>;
+  public static var allTiles : Array<Tile>;
+
+  public static function findAndRemoveBadgers(world : Array<Tile>) : Array<Coor> {
+    for (i in 0...world.length) {
+      var c = tileCoords(i);
+    }
+    return new Array<Coor>();
+  }
 
   public static function drawTheTiles(frame : Int) {
     drawTiles(worldState, frame);
@@ -61,12 +81,12 @@ class World {
   }
 
   // game parameters
-  static var screenw:Int = 600;
-  static var screenh:Int = 600;
+  public static var screenw:Int = 600;
+  public static var screenh:Int = 600;
   
   public static var tilesize:Int = Tile.size;
-  static var tilesh = Math.round(screenh/tilesize);
-  static var tilesw = Math.round(screenw/tilesize);
+  public static var tilesh = Math.round(screenh/tilesize);
+  public static var tilesw = Math.round(screenw/tilesize);
 
 /*
   public static function initTiles () {
@@ -95,8 +115,16 @@ class World {
     }
   }
 
+  public static function tileIndex(x: Int, y: Int) : Int {
+    return y*tilesw + x;
+  }
+
+  public static function tileCoords(index: Int) : Coor {
+    return { x : index % tilesw, y : Math.floor(index / tilesw) };
+  }
+
   public static function getTile(x:Int, y:Int) : Tile {
-    return worldState[y*tilesw + x];
+    return worldState[tileIndex(x, y)];
   }
 
   public static function setTile(x:Int, y:Int, t:Tile) {
