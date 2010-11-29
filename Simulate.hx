@@ -20,19 +20,45 @@ class Simulate {
  */
 
   public static function get(w : World_t, x : Int, y : Int) : Tile {
-    if (x < 0 || x >= World.tilesw || y < 0 || y > World.tilesh) {
+    if (x < 0 || x >= World.tilesw || y < 0 || y >= World.tilesh) {
       return World.allTiles[World.WALL];
     }
     return w[y * World.tilesw + x];
   }
 
   public static function set(w : World_t, x : Int, y : Int, t : Tile) {
-    // XXX no bounds checks!
-    if (x < 0 || x >= World.tilesw || y < 0 || y > World.tilesh) {
+    if (x < 0 || x >= World.tilesw || y < 0 || y >= World.tilesh) {
       trace('OOB ASSHOLE');
     } else {
       w[y * World.tilesw + x] = t;
     }
+  }
+
+  // If you are stepped on, then you are dead.
+  public static function steppedOn(w : World_t, x : Int, y : Int) {
+    var t = get(w, x, y - 1);
+    return t.style.prop.isbadger || t.style.prop.isturtle;
+  }
+
+  public static function solidThere(oldworld : World_t,
+				    newworld : World_t,
+				    x : Int, y : Int) {
+    return get(oldworld, x, y).style.prop.solid ||
+      get(newworld, x, y).style.prop.solid;
+  }
+
+  public static function standingOnfloor(oldworld : World_t,
+					 newworld : World_t,
+					 x : Int, y : Int) {
+    return get(oldworld, x, y).style.prop.standon &&
+      get(newworld, x, y).style.prop.standon;
+  }
+
+  public static function clearThere(oldworld : World_t,
+				    newworld : World_t,
+				    x : Int, y : Int) {
+    return get(oldworld, x, y).style.id == World.NOTHING &&
+      get(newworld, x, y).style.id == World.NOTHING;
   }
 
  // Compute the next world state from the current one.
@@ -60,7 +86,7 @@ class Simulate {
 	 // new material that moved into this spot.
 	 
        case 0x000a: // MOVEDOWN
-	 if (get(w, x, y + 1).style.prop.solid) {
+	 if (solidThere(w, newworld, x, y + 1)) {
 	   // Blocked; flip in place.
 	   set(newworld, x, y, World.allTiles[World.MOVEUP]);
 	 } else {
@@ -69,9 +95,7 @@ class Simulate {
 	 }
 
        case 0x000b: // MOVELEFT
-	 if (get(w, x - 1, y).style.prop.solid ||
-	     // because this is lexicographically before
-	     get(newworld, x - 1, y).style.prop.solid) {
+	 if (solidThere(w, newworld, x - 1, y)) {
 	   // Blocked; flip in place.
 	   set(newworld, x, y, World.allTiles[World.MOVERIGHT]);
 	 } else {
@@ -80,7 +104,7 @@ class Simulate {
 	 }
 
        case 0x000c: // MOVERIGHT
-	 if (get(w, x + 1, y).style.prop.solid) {
+	 if (solidThere(w, newworld, x + 1, y)) {
 	   // Blocked; flip in place.
 	   set(newworld, x, y, World.allTiles[World.MOVELEFT]);
 	 } else {
@@ -89,9 +113,7 @@ class Simulate {
 	 }
 
        case 0x000d: // MOVEUP
-	 if (get(w, x, y - 1).style.prop.solid ||
-	     // because this is lexicographically before
-	     get(newworld, x, y - 1).style.prop.solid) {
+	 if (solidThere(w, newworld, x, y - 1)) {
 	   // Blocked; flip in place.
 	   set(newworld, x, y, World.allTiles[World.MOVEDOWN]);
 	 } else {
@@ -100,36 +122,62 @@ class Simulate {
 	 }
 
        case 0x0001: // TURTLE L
-	 trace(' i am turtle ');
-         if (get(w, x - 1, y).style.prop.isbadger ||
-	     (!get(w, x - 1, y).style.prop.solid &&
-              !get(newworld, x - 1, y).style.prop.solid)) {
+	 var xx : Int, yy : Int, deadtile : Int;
+	 // XXX allow walking into badger -- but in the future or now??
+         if (!solidThere(w, newworld, x - 1, y)) {
 	   // Might kill badger!
-	   trace('the turtle moves');
-	   trace('It is: ' + World.NOTHING);
-	   var noth = World.allTiles[World.NOTHING];
-	   trace('I got: ' + noth);
 	   set(newworld, x - 1, y, thistile);
-	   set(newworld, x, y, noth);
+	   set(newworld, x, y, World.allTiles[World.NOTHING]);
+	   xx = x - 1;
+	   yy = y;
+	   deadtile = World.TURTLELDEAD;
 	 } else {
 	   // Flip in place.
-	   trace('flip out!');
 	   set(newworld, x, y, World.allTiles[World.TURTLER]);
+	   xx = x;
+	   yy = y;
+	   deadtile = World.TURTLERDEAD;
+	 }
+
+	 // Fall too?
+	 if (clearThere(w, newworld, xx, yy + 1)) {
+	   set(newworld, xx, yy, World.allTiles[World.NOTHING]);
+	   yy++;
+	   set(newworld, xx, yy, thistile);
+	 }
+
+	 if (steppedOn(newworld, xx, yy)) {
+	   set(newworld, xx, yy, World.allTiles[deadtile]);
+	   Achievements.got('killturt');
 	 }
 
        case 0x0002: // TURTLE R
-	 trace('\nturtler! ');
-         if (get(w, x + 1, y).style.prop.isbadger ||
-	     !get(w, x + 1, y).style.prop.solid) {
+	 var xx : Int, yy : Int, deadtile : Int;
+         if (!solidThere(w, newworld, x + 1, y)) {
 	   // Might kill badger!
-	   trace('might\n');
 	   set(newworld, x + 1, y, thistile);
 	   set(newworld, x, y, World.allTiles[World.NOTHING]);
-	   trace('ok\n');
+	   xx = x + 1;
+	   yy = y;
+	   deadtile = World.TURTLERDEAD;
 	 } else {
 	   // Flip in place.
-	   trace('lsip\n');
 	   set(newworld, x, y, World.allTiles[World.TURTLEL]);
+	   xx = x;
+	   yy = y;
+	   deadtile = World.TURTLELDEAD;
+	 }
+
+	 // Fall too?
+	 if (clearThere(w, newworld, xx, yy + 1)) {
+	   set(newworld, xx, yy, World.allTiles[World.NOTHING]);
+	   yy = yy + 1;
+	   set(newworld, xx, yy, thistile);
+	 }
+
+	 if (steppedOn(newworld, xx, yy)) {
+	   set(newworld, xx, yy, World.allTiles[deadtile]);
+	   Achievements.got('killturt');
 	 }
 
        case 0x0035: // Dead turtles
@@ -182,7 +230,7 @@ class Simulate {
   // Draw an array of moves |mvs| which are relative to the player's position |x,y|.
  public static function drawMovesRel(player_x:Int, player_y:Int, mvs:Array<Coor>) {
    var newmvs = Utils.map(function(c) {
-                      return {x : c.x + player_x, y : c.y + player_y - 1};
+                      return {x : c.x + player_x, y : c.y + player_y};
                      },
                      mvs);
    drawMoves(newmvs);                    

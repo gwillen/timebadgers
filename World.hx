@@ -25,6 +25,8 @@ class World {
   public static var MOVEUP : Int = 13;
   public static var TURTLEL : Int = 0x0001;
   public static var TURTLER : Int = 0x0002;
+  public static var TURTLELDEAD : Int = 0x0035;
+  public static var TURTLERDEAD : Int = 0x0036;
 
   public static var tilesLoaded : Bool = false;
 
@@ -42,7 +44,7 @@ class World {
     });
 
     LoadStuff.loadImageAndCall("background_nightsky.png", function(l) {
-      Game.rootmc.addChildAt(l, 0);
+      Game.setBackground(l);
     });
 
     // Also async
