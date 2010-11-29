@@ -51,3 +51,13 @@
 0032 1100000000000000 tile_conveyorl1.png 5 tile_conveyorl2.png 5 tile_conveyorl2.5.png 5 tile_conveyorl3.png 5 tile_conveyorl4.png 5
 0033 1100000000000000 tile_conveyorl4.png 5 tile_conveyorl3.png 5 tile_conveyorl2.5.png 5 tile_conveyorl2.png 5 tile_conveyorl1.png 5
 0034 1110000000000000 char_badgerr1.png 10 char_badgerr2.png 10
+0035 1100000000000000 tile_cloud1.png 1
+0036 1100000000000000 tile_cloud2.png 1
+0037 1100000000000000 tile_ivy1.png 1
+0038 1100000000000000 tile_ivy2.png 1
+0039 1100000000000000 tile_lightning.png 1
+003a 1100000000000000 tile_cloud3.png 1
+003b 1100000000000000 tile_cloud4.png 1
+003c 1100000000000000 tile_olympus_right.png 1
+003d 1100000000000000 tile_olympus_center.png 1
+003e 1100000000000000 tile_olympus_left.png 1
