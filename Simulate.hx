@@ -88,7 +88,7 @@ class Simulate {
 	   set(newworld, x, y, World.allTiles[World.NOTHING]);
 	 } else {
 	   // Flip in place.
-	   set(newworld, x, y, World.allTiles[World.TURTLER];
+	   set(newworld, x, y, World.allTiles[World.TURTLER]);
 	 }
 
        case 0x0002: // TURTLE R
@@ -99,13 +99,12 @@ class Simulate {
 	   set(newworld, x, y, World.allTiles[World.NOTHING]);
 	 } else {
 	   // Flip in place.
-	   set(newworld, x, y, World.allTiles[World.TURTLEL];
+	   set(newworld, x, y, World.allTiles[World.TURTLEL]);
 	 }
 
        default:
 	 set(newworld, x, y, thistile);
 	 break;
-
        }
      }
    }
