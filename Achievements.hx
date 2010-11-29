@@ -1,5 +1,6 @@
 import flash.text.TextField;
 import flash.text.TextFormat;
+import flash.text.TextFormatAlign;
 
 class Achievements {
   static var ach = new Hash<{ name : String, desc : String, achieved : Bool}>();
@@ -23,8 +24,12 @@ class Achievements {
       a.achieved = true;
       ach.set(name, a);
       trace("Player got achievement: " + a.desc);
-      displaybox.set("Acheivement unlocked: " + a.desc);
+      displaybox.set("Achievement unlocked:\n" + a.desc);
     }
+  }
+
+  public static function tick() {
+    displaybox.tick();
   }
 }
 
@@ -32,17 +37,32 @@ class AchievementTextField extends TextField{
 
    public function new() {   
       super();
-      width = 500;
-      height = 500;
-      x = 50;
-      y = 50;
+      width = 300;
+      height = 66;
+      x = (600 - width)/2;
+      y = (600 - height)/2;
       textColor = 0x0000CF;
-      defaultTextFormat = new TextFormat(null, 30);
-      background = false;
+      selectable = false;
+      defaultTextFormat = new TextFormat("Comic Sans", 30, null, null, null, null, null, null, TextFormatAlign.CENTER);
+      background = true;
+      backgroundColor = 0xFFFFFF;
+      visible = false;
+      alpha = 0.4;
    }
 
    public function set(s : String) {
      text = s;
+     timer = 20;
+     visible = true;
    }
 
+   public function tick() {
+     if (timer > 0) {
+       timer--;
+     } else {
+       visible = false;
+     }
+   }
+
+   static var timer : Int = 0;
 }
