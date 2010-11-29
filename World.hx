@@ -64,6 +64,13 @@ class World {
   public static var tileStyles : Array<TileStyle>;
   public static var allTiles : Array<Tile>;
 
+  public static function findAndRemoveBadgers(world : Array<Tile>) : Array<Coor> {
+    tileCoords
+    for (i in 0...world.length) {
+      var c = tileCoords(i);
+    }
+  }
+
   public static function drawTheTiles(frame : Int) {
     drawTiles(worldState, frame);
   }
@@ -109,8 +116,16 @@ class World {
     }
   }
 
+  public static function tileIndex(x: Int, y: Int) : Int {
+    return y*tilesw + x;
+  }
+
+  public static function tileCoords(index: Int) : Coor {
+    return { x : index % tilesw, y : Math.floor(index / tilesw) };
+  }
+
   public static function getTile(x:Int, y:Int) : Tile {
-    return worldState[y*tilesw + x];
+    return worldState[tileIndex(x, y)];
   }
 
   public static function setTile(x:Int, y:Int, t:Tile) {
