@@ -61,8 +61,7 @@ class World {
     Game.debugtf.trace("World loading stuff.\n");
   }
 
-  static var worldState: World_t;
-  
+  public static var worldState: World_t;
   public static var tileStyles : Array<TileStyle>;
   public static var allTiles : Array<Tile>;
 
@@ -154,6 +153,10 @@ class World {
     }
   }
 
+  //XXX stub
+  public static function findBadgers() :Array<{x:Int, y:Int}> {
+    return [{x:4, y:11}];
+  }
 
 }
 

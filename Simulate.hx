@@ -3,6 +3,12 @@ import Jump;
 import flash.display.Sprite;
 import flash.display.Bitmap;
 
+typedef StepResult = {
+  var world: World_t;
+  var badger_died: Bool;
+  var badger_on_floor: Bool;
+}
+
 class Simulate {
 
  /* 
