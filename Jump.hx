@@ -40,7 +40,7 @@ class Jump extends Sprite {
   static var rru  = readjmp([ {x:2,y:-1}, {x:1,y:-1}]);
   static var rruu  = readjmp([ {x:2,y:-2}, {x:0,y:-1}, {x:1,y:-2}]);
   static var rrr  = readjmp([ {x:3,y:0}, {x:1,y:0}, {x:2,y:0}]);
-  static var rrru  = readjmp([ {x:3,y:0}, {x:1,y:-1}, {x:2,y:-1}]);
+  static var rrru  = readjmp([ {x:3,y:-1}, {x:1,y:-1}, {x:2,y:-1}]);
 
   static var rd = readjmp([{x:1,y:1},{x:1,y:0}]);
   static var rdd = readjmp([{x:1,y:2},
