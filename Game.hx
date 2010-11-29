@@ -59,11 +59,11 @@ class Game {
     World.clearTheTiles();
     // trace('drawthetiles:');
     World.drawTheTiles(frame++);
-//    Simulate.drawMoves([{x:5,y:5}]);
-    // trace('findbadgers:');
-    var badger_coord = World.findBadgers()[0]; //XXX
+//    var badger_coord = World.findBadgers()[0]; //XXX
+    var badger_coord = World.findAndRemoveBadgers(World.worldState)[0]; //XXX
     var badg_x = badger_coord.x;
     var badg_y = badger_coord.y;
+    trace ("badger x = " + badg_x + " and y = " + badg_y + "\n");
     var state0 = World.worldState;
     var state1 = World.worldState;
     var jump_dests = Utils.map(function(j:Jump.Jmp) { return j.dest; },
