@@ -132,6 +132,11 @@ class Simulate {
 	   set(newworld, x, y, World.allTiles[World.TURTLEL]);
 	 }
 
+       case 0x0035: // Dead turtles
+	 set(newworld, x, y, World.allTiles[World.NOTHING]);
+       case 0x0036: // Dead turtles
+	 set(newworld, x, y, World.allTiles[World.NOTHING]);
+
        default:
 	 set(newworld, x, y, thistile);
        }
