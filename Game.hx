@@ -99,7 +99,7 @@ class Game {
 
     var jump_dests = Utils.map(function(j:Jump.Jmp) { return j.dest; },
                                 Jump.validJumps(state0, state1, badg_x, badg_y));
-//    jump_dests = [{x:5, y:5}];                                
+
     Simulate.drawMovesRel(badg_x, badg_y, jump_dests);
 
     // This is retardo -- you need to do this as part of PROPOSAL X.
