@@ -46,7 +46,16 @@ class Game {
     }
     World.clearTheTiles();
     World.drawTheTiles(frame++);
-    Simulate.drawMoves([{x:5,y:5}]);
+//    Simulate.drawMoves([{x:5,y:5}]);
+    var badger_coord = World.findBadgers()[0]; //XXX
+    var bad_x = badger_coord.x;
+    var bad_y = badger_coord.y;
+    var state0 = World.worldState;
+    var state1 = World.worldState;
+    var jump_dests = Utils.map(function(j:Jump.Jmp) { return j.dest; },
+                                Jump.validJumps(state0, state1, bad_x, bad_y));
+//    jump_dests = [{x:5, y:5}];                                
+    Simulate.drawMovesRel(bad_x, bad_y, jump_dests);
   }
 
   static function main() {
