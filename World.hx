@@ -27,6 +27,8 @@ class World {
   public static var TURTLER : Int = 0x0002;
   public static var TURTLELDEAD : Int = 0x0035;
   public static var TURTLERDEAD : Int = 0x0036;
+  public static var CONVEYORL : Int = 0x0032;
+  public static var CONVEYORR : Int = 0x0033;
 
   public static var tilesLoaded : Bool = false;
 
@@ -77,7 +79,7 @@ class World {
     for (i in 0...world.length) {
       var c = tileCoords(i);
       if (world[i].style.prop.isbadger) {
-        //world[i].style = tileStyles[0];  // empty tile XXX
+          world[i] = allTiles[0];  // empty tile 
         rv.push(c);
       }
     }
@@ -231,11 +233,13 @@ class TileProperties {
     solid = Utils.parseBool(bits.charAt(1));
     isbadger = Utils.parseBool(bits.charAt(2));
     isturtle = Utils.parseBool(bits.charAt(3));
+    conveyed = Utils.parseBool(bits.charAt(4));
   }
   public var standon : Bool;
   public var solid : Bool;
   public var isbadger : Bool;
   public var isturtle : Bool;
+  public var conveyed : Bool;
 }
 
 class TileStyle {

@@ -62,6 +62,8 @@ class Simulate {
   }
 
  // Compute the next world state from the current one.
+ // When you read this code you will realize that I did not
+ // think it through very well before starting, hehe! - tom7
  public static function step(w : World_t) : World_t {
    // XXX should be same size as w; allegedly this allocates
    // as fields are accessed.
@@ -72,7 +74,8 @@ class Simulate {
        newworld.push(World.allTiles[World.NOTHING]);
      }
    }
-   
+
+   // Pass 1: Copy all the solid stuff, walk turtles, fall turtles and rocks.
    for (y in 0...World.tilesh) {
      for (x in 0...World.tilesw) {
        var thistile = get(w, x, y);
@@ -180,6 +183,18 @@ class Simulate {
 	   Achievements.got('killturt');
 	 }
 
+       case 0x0037: // Rock
+	 var xx : Int = x;
+	 var yy : Int = y;
+	 if (clearThere(w, newworld, xx, yy + 1)) {
+	   set(newworld, xx, yy, World.allTiles[World.NOTHING]);
+	   yy = yy + 1;
+	   set(newworld, xx, yy, thistile);
+	 } else {
+	   // stays.
+	   set(newworld, xx, yy, thistile);
+	 }
+
        case 0x0035: // Dead turtles
 	 set(newworld, x, y, World.allTiles[World.NOTHING]);
        case 0x0036: // Dead turtles
@@ -190,6 +205,49 @@ class Simulate {
        }
      }
    }
+
+   // Pass 2: Fall badgers.
+   for (y in 0...World.tilesh) {
+     for (x in 0...World.tilesw) {
+       var thistile = get(w, x, y);
+       if (thistile.style.prop.isbadger) {
+	 // You keep falling?
+	 if (clearThere(newworld, newworld, x, y + 1)) {
+	   set(newworld, x, y, World.allTiles[World.NOTHING]);
+	   set(newworld, x, y + 1, thistile);
+	 }
+       }
+     }
+   }
+
+   // Pass 3: Conveyors move material.
+   for (y in 0...World.tilesh) {
+     for (x in 0...World.tilesw) {
+       var thistile = get(w, x, y);
+       if (thistile.style.id == World.CONVEYORL) {
+	 // Is the thing atop me conveyed?
+	 var above = get(newworld, x, y - 1);
+	 if (above.style.prop.conveyed) {
+	   if (clearThere(newworld, newworld, x - 1, y - 1)) {
+	     set(newworld, x, y - 1, World.allTiles[World.NOTHING]);
+	     set(newworld, x - 1, y - 1, above);
+	   }
+	 }
+
+       } else if (thistile.style.id == World.CONVEYORR) {
+	 // Is the thing atop me conveyed?
+	 var above = get(newworld, x, y - 1);
+	 if (above.style.prop.conveyed) {
+	   if (clearThere(newworld, newworld, x + 1, y - 1)) {
+	     set(newworld, x, y - 1, World.allTiles[World.NOTHING]);
+	     set(newworld, x + 1, y - 1, above);
+	   }
+	 }
+       }
+     }
+   }
+
+   // XXX DEATHS!
 
    trace('return: ' + newworld.length);
   return newworld;
@@ -213,11 +271,12 @@ class Simulate {
  static function drawMove(mv: Coor){
         var s = new Sprite();
         s.x = mv.x * World.tilesize + World.tilesize / 2;
-        s.y = mv.y * World.tilesize + World.tilesize / 2; // 12-pixel overlap zone
+        s.y = mv.y * World.tilesize + World.tilesize / 2; 
         s.graphics.beginFill(0x0000FF);
         s.graphics.drawCircle(0,0,7);
         s.graphics.endFill();
         s.visible= true;
+        s.alpha = 0.5;
         Game.mainmc.addChild(s);    
  }
 

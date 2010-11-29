@@ -82,20 +82,24 @@ class Game {
         !World.tilesLoaded) {
       return;
     }
+
+    Achievements.tick();
     // trace('clearthetiles:');
     World.clearTheTiles();
     // trace('drawthetiles:');
     World.drawTheTiles(frame++);
-//    var badger_coord = World.findBadgers()[0]; //XXX
-    var badger_coord = World.findAndRemoveBadgers(World.worldState)[1]; //XXX
+    var state0 = World.worldState;
+    var state1 = World.worldState.copy();
+
+
+    var badger_coord = World.findAndRemoveBadgers(state1)[0]; //XXX
     var badg_x = badger_coord.x;
     var badg_y = badger_coord.y;
     //trace ("badger x = " + badg_x + " and y = " + badg_y);
-    var state0 = World.worldState;
-    var state1 = World.worldState;
+
     var jump_dests = Utils.map(function(j:Jump.Jmp) { return j.dest; },
                                 Jump.validJumps(state0, state1, badg_x, badg_y));
-//    jump_dests = [{x:5, y:5}];                                
+
     Simulate.drawMovesRel(badg_x, badg_y, jump_dests);
 
     // This is retardo -- you need to do this as part of PROPOSAL X.
