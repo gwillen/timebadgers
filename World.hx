@@ -159,10 +159,11 @@ class World {
     }
   }
 
-  //XXX stub
+  /*XXX dummy
   public static function findBadgers() :Array<{x:Int, y:Int}> {
     return [{x:4, y:11}];
   }
+  */
 
 }
 
