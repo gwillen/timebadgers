@@ -15,6 +15,9 @@ typedef Coor = {
 }   
 
 class World {
+
+
+
   public static var tile:Array<Ref<Loader>>;
   // These are indices into the tile array.
   public static var NOTHING : Int = 0;
@@ -92,10 +95,20 @@ class World {
     for (i in 0...world.length) {
       if ( world[i].style.prop.isbadger) {
         badger = Option.some(world[i]);
-        world[i].style = tileStyles[0]; // empty tile
+        world[i] = allTiles[0]; // empty tile
         break;
       }
     }
+    
+    var dest = getTileW(world, new_x, new_y);
+    
+    if(dest == allTiles[0]){
+     switch (badger) {
+       case some(w): {setTileW(world, new_x, new_y, w);}
+       case none : {return;}
+       }
+    }
+
     /*
     switch(badger) {
       case some(t): {
@@ -180,6 +193,10 @@ class World {
 
   public static function setTile(x:Int, y:Int, t:Tile) {
     worldState[y*tilesw + x] = t;
+  }
+
+  public static function setTileW(w: World_t, x:Int, y:Int, t:Tile) {
+    w[y*tilesw + x] = t;
   }
 
   // XXX

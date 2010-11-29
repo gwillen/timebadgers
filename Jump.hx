@@ -102,10 +102,10 @@ class Jump extends Sprite {
 
   public static var jmps = rightjmps.concat(leftjmps).concat([u,uu,uuu]);
 
-
-  static function stringofcoor(c : Coor){
+  public static function stringofcoor(c : Coor){
     return  ("(" + c.x + "," + c.y  + ")");
   } 
+
 
   static function stringofjmp(j : Jmp) {
     var d =  ( "dest= " + stringofcoor(j.dest) + " path = ");
