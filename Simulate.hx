@@ -149,12 +149,12 @@ class Simulate {
 	   yy++;
 	   set(newworld, xx, yy, thistile);
 	 }
-         */
 
 	 if (steppedOn(newworld, xx, yy)) {
 	   set(newworld, xx, yy, World.allTiles[deadtile]);
 	   Achievements.got('killturt');
 	 }
+         */
 
        case 0x0002: // TURTLE R
 	 var xx : Int, yy : Int, deadtile : Int;
@@ -180,12 +180,12 @@ class Simulate {
 	   yy = yy + 1;
 	   set(newworld, xx, yy, thistile);
 	 }
-         */
 
 	 if (steppedOn(newworld, xx, yy)) {
 	   set(newworld, xx, yy, World.allTiles[deadtile]);
 	   Achievements.got('killturt');
 	 }
+         */
 
        case 0x0037: // Rock
 	 var xx : Int = x;
@@ -211,9 +211,12 @@ class Simulate {
    }
 
    // Pass 2: Fall things that fall.
-   for (y in 0...World.tilesh) {
+   for (yinv in 0...World.tilesh) {
+     // Go upward so we don't keep falling something with each
+     // successive row...
+     var y = World.tilesh - yinv - 1;
      for (x in 0...World.tilesw) {
-       var thistile = get(w, x, y);
+       var thistile = get(newworld, x, y);
        if (thistile.style.prop.falls) {
 	 // You keep falling?
 	 if (clearThere(newworld, newworld, x, y + 1)) {
@@ -228,7 +231,7 @@ class Simulate {
    var just_conveyed = false; // hehe I am pro hacker
    for (y in 0...World.tilesh) {
      for (x in 0...World.tilesw) {
-       var thistile = get(w, x, y);
+       var thistile = get(newworld, x, y);
        if (thistile.style.id == World.CONVEYORL) {
 	 just_conveyed = false;
 	 // Is the thing atop me conveyed?
@@ -256,6 +259,26 @@ class Simulate {
 	 }
        } else {
 	 just_conveyed = false;
+       }
+     }
+   }
+
+   // Pass 4: Kill shit that is dead.
+   for (yinv in 0...World.tilesh) {
+     // Go upward so a whole stack of turtles kills all of
+     // them but the top.
+     var y = World.tilesh - yinv - 1;
+     for (x in 0...World.tilesw) {
+       var thistile = get(newworld, x, y);
+       if (thistile.style.prop.nostep) {
+	 if (steppedOn(newworld, x, y)) {
+	   if (thistile.style.prop.isturtle) {
+	     Achievements.got('killturt');
+	   } else if (thistile.style.id == World.GWILLEN) {
+	     Achievements.got('killgwill');
+	   }
+	   set(newworld, x, y, World.allTiles[World.deathTile(thistile.style.id)]);
+	 }
        }
      }
    }

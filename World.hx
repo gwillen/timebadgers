@@ -29,6 +29,7 @@ class World {
   public static var TURTLERDEAD : Int = 0x0036;
   public static var CONVEYORL : Int = 0x0032;
   public static var CONVEYORR : Int = 0x0033;
+  public static var GWILLEN : Int = 0x0042;
 
   public static var tilesLoaded : Bool = false;
 
@@ -51,7 +52,7 @@ class World {
 
     // Also async
     worldState = new Array<Tile>();
-    LoadStuff.loadLevel("conveyorland.map", worldState);
+    LoadStuff.loadLevel("skyline1.map", worldState);
 
     // call initTiles when the loading is all completed. XXX: it is no longer
     // really necessary to do this in this order, since all our logic is in
@@ -68,6 +69,15 @@ class World {
     //initTiles();
 
     Game.debugtf.trace("World loading stuff.\n");
+  }
+
+  // Returns the tile that this thing should become if it dies.
+  public static function deathTile(t : Int) : Int {
+    switch(t) {	
+      case 0x0001: return World.TURTLELDEAD;
+      case 0x0002: return World.TURTLERDEAD;
+      default: return World.NOTHING;
+    }
   }
 
   public static var worldState: World_t;
@@ -239,13 +249,18 @@ class TileProperties {
     isturtle = Utils.parseBool(bits.charAt(3));
     conveyed = Utils.parseBool(bits.charAt(4));
     falls = Utils.parseBool(bits.charAt(5));
+    nostep = Utils.parseBool(bits.charAt(6));
   }
   public var standon : Bool;
   public var solid : Bool;
   public var isbadger : Bool;
   public var isturtle : Bool;
+  // Moved by conveyors.
   public var conveyed : Bool;
+  // Falls if nothing's under it.
   public var falls : Bool;
+  // If something lands on it, then it dies.
+  public var nostep : Bool;
 }
 
 class TileStyle {

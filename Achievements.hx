@@ -10,6 +10,7 @@ class Achievements {
     displaybox = new AchievementTextField(); 
     Game.rootmc.addChild(displaybox);
     add("killturt", "You killed a turtle!");
+    add("killgwill", "You killed a gwillen!");
   }
 
   static function add(name : String, desc : String) { 
