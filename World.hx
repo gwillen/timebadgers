@@ -15,12 +15,15 @@ typedef Coor = {
 }   
 
 class World {
-  public static var tile:Array<Ref<Loader>>;
-
   public static function loadStuff() {
     tileStyles = new Array<TileStyle>();
+    allTiles = new Array<Tile>();
     // Danger: This call is async.
     LoadStuff.loadTileMap(tileStyles);
+    for (i in 0...tileStyles.length) {
+      allTiles[i] = new Tile();
+      allTiles[i].style = tileStyles[i];
+    }
 
     LoadStuff.loadImageAndCall("background_nightsky.png", function(l) {
       Game.rootmc.addChildAt(l, 0);
@@ -48,7 +51,9 @@ class World {
   }
 
   static var worldState: World_t;
+  
   public static var tileStyles : Array<TileStyle>;
+  public static var allTiles : Array<Tile>;
 
   public static function drawTheTiles(frame : Int) {
     drawTiles(worldState, frame);
