@@ -82,6 +82,33 @@ class World {
     return rv;
   }
 
+  public static function moveBadger(world : World_t, new_x, new_y)
+  : Void {
+    var badger = Option.none;
+    for (i in 0...world.length) {
+      if ( world[i].style.prop.isbadger) {
+        badger = Option.some(world[i]);
+        world[i].style = tileStyles[0]; // empty tile
+        break;
+      }
+    }
+    /*
+    switch(badger) {
+      case some(t): {
+        trace("found a badger");
+        for (i in 0...world.length) {
+          if (new_x*30 + new_y == i) { // new badger location
+            world[i] = t;
+          }
+        }
+      }
+      default: {
+        trace("DID NOT FIND IT");
+      }
+    }
+    */
+  }
+
   public static function drawTheTiles(frame : Int) {
     drawTiles(worldState, frame);
   }

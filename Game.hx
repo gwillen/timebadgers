@@ -28,6 +28,10 @@ class Game {
 
   static function handleclick(event : MouseEvent) {
       debugtf.trace("you mousedowned at " + event.localX + " " + event.localY + "\n");
+      // teleport the badget there
+      // XXX write this var tile_coord = whichTile(event.localX, even.localY);
+      var tile_coord = {x : 5, y : 5};
+      World.moveBadger(World.worldState, tile_coord.x, tile_coord.y);
   }
 
   static function handlekeydown(event : KeyboardEvent) {
