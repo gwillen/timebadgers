@@ -15,6 +15,9 @@ typedef Coor = {
 }   
 
 class World {
+
+
+
   public static var tile:Array<Ref<Loader>>;
   // These are indices into the tile array.
   public static var NOTHING : Int = 0;
@@ -29,6 +32,7 @@ class World {
   public static var TURTLERDEAD : Int = 0x0036;
   public static var CONVEYORL : Int = 0x0032;
   public static var CONVEYORR : Int = 0x0033;
+  public static var GWILLEN : Int = 0x0042;
 
   public static var tilesLoaded : Bool = false;
 
@@ -70,6 +74,15 @@ class World {
     Game.debugtf.trace("World loading stuff.\n");
   }
 
+  // Returns the tile that this thing should become if it dies.
+  public static function deathTile(t : Int) : Int {
+    switch(t) {	
+      case 0x0001: return World.TURTLELDEAD;
+      case 0x0002: return World.TURTLERDEAD;
+      default: return World.NOTHING;
+    }
+  }
+
   public static var worldState: World_t;
   public static var tileStyles : Array<TileStyle>;
   public static var allTiles : Array<Tile>;
@@ -92,10 +105,20 @@ class World {
     for (i in 0...world.length) {
       if ( world[i].style.prop.isbadger) {
         badger = Option.some(world[i]);
-        world[i].style = tileStyles[0]; // empty tile
+        world[i] = allTiles[0]; // empty tile
         break;
       }
     }
+    
+    var dest = getTileW(world, new_x, new_y);
+    
+    if(dest == allTiles[0]){
+     switch (badger) {
+       case some(w): {setTileW(world, new_x, new_y, w);}
+       case none : {return;}
+       }
+    }
+
     /*
     switch(badger) {
       case some(t): {
@@ -174,8 +197,16 @@ class World {
     return worldState[tileIndex(x, y)];
   }
 
+  public static function getTileW(w: World_t, x:Int, y:Int) : Tile {
+    return w[tileIndex(x, y)];
+  }
+
   public static function setTile(x:Int, y:Int, t:Tile) {
     worldState[y*tilesw + x] = t;
+  }
+
+  public static function setTileW(w: World_t, x:Int, y:Int, t:Tile) {
+    w[y*tilesw + x] = t;
   }
 
   // XXX
@@ -184,7 +215,7 @@ class World {
     if (x < 0 || x >= tilesw || y < 0 || y >= tilesh) {
       return true;
     } else {
-      return getTile(x, y).style.prop.solid;
+      return getTileW(w,x, y).style.prop.solid;
     }
   }
 
@@ -194,7 +225,7 @@ class World {
     if (x < 0 || x >= tilesw || y < 0 || y >= tilesh) {
       return false;
     } else {
-      return getTile(x, y).style.prop.standon;
+      return getTileW(w,x, y).style.prop.standon;
     }
   }
 
@@ -234,12 +265,19 @@ class TileProperties {
     isbadger = Utils.parseBool(bits.charAt(2));
     isturtle = Utils.parseBool(bits.charAt(3));
     conveyed = Utils.parseBool(bits.charAt(4));
+    falls = Utils.parseBool(bits.charAt(5));
+    nostep = Utils.parseBool(bits.charAt(6));
   }
   public var standon : Bool;
   public var solid : Bool;
   public var isbadger : Bool;
   public var isturtle : Bool;
+  // Moved by conveyors.
   public var conveyed : Bool;
+  // Falls if nothing's under it.
+  public var falls : Bool;
+  // If something lands on it, then it dies.
+  public var nostep : Bool;
 }
 
 class TileStyle {

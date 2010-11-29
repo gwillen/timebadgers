@@ -8,6 +8,7 @@ import flash.net.URLRequest;
 import flash.display.Sprite;
 import flash.display.Bitmap;
 
+import World;
 import World.World;
 import World.Tile;
 import DebugTextField;
@@ -38,8 +39,9 @@ class Game {
       lastClick = event;
       debugtf.trace("you mousedowned at " + event.localX + " " + event.localY + "\n");
       // teleport the badget there
-      // XXX write this var tile_coord = whichTile(event.localX, even.localY);
-      var tile_coord = {x : 5, y : 5};
+      var tile_coord:Coor = {x : cast (event.stageX / World.tilesize) , 
+                        y : cast (event.stageY / World.tilesize)};
+      trace ("teleporting to :" + Jump.stringofcoor(tile_coord));
       World.moveBadger(World.worldState, tile_coord.x, tile_coord.y);
   }
 

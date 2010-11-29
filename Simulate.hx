@@ -143,6 +143,7 @@ class Simulate {
 	 }
 
 	 // Fall too?
+	 /*
 	 if (clearThere(w, newworld, xx, yy + 1)) {
 	   set(newworld, xx, yy, World.allTiles[World.NOTHING]);
 	   yy++;
@@ -153,6 +154,7 @@ class Simulate {
 	   set(newworld, xx, yy, World.allTiles[deadtile]);
 	   Achievements.got('killturt');
 	 }
+         */
 
        case 0x0002: // TURTLE R
 	 var xx : Int, yy : Int, deadtile : Int;
@@ -172,6 +174,7 @@ class Simulate {
 	 }
 
 	 // Fall too?
+	 /*
 	 if (clearThere(w, newworld, xx, yy + 1)) {
 	   set(newworld, xx, yy, World.allTiles[World.NOTHING]);
 	   yy = yy + 1;
@@ -182,6 +185,7 @@ class Simulate {
 	   set(newworld, xx, yy, World.allTiles[deadtile]);
 	   Achievements.got('killturt');
 	 }
+         */
 
        case 0x0037: // Rock
 	 var xx : Int = x;
@@ -206,11 +210,14 @@ class Simulate {
      }
    }
 
-   // Pass 2: Fall badgers.
-   for (y in 0...World.tilesh) {
+   // Pass 2: Fall things that fall.
+   for (yinv in 0...World.tilesh) {
+     // Go upward so we don't keep falling something with each
+     // successive row...
+     var y = World.tilesh - yinv - 1;
      for (x in 0...World.tilesw) {
-       var thistile = get(w, x, y);
-       if (thistile.style.prop.isbadger) {
+       var thistile = get(newworld, x, y);
+       if (thistile.style.prop.falls) {
 	 // You keep falling?
 	 if (clearThere(newworld, newworld, x, y + 1)) {
 	   set(newworld, x, y, World.allTiles[World.NOTHING]);
@@ -221,10 +228,12 @@ class Simulate {
    }
 
    // Pass 3: Conveyors move material.
+   var just_conveyed = false; // hehe I am pro hacker
    for (y in 0...World.tilesh) {
      for (x in 0...World.tilesw) {
-       var thistile = get(w, x, y);
+       var thistile = get(newworld, x, y);
        if (thistile.style.id == World.CONVEYORL) {
+	 just_conveyed = false;
 	 // Is the thing atop me conveyed?
 	 var above = get(newworld, x, y - 1);
 	 if (above.style.prop.conveyed) {
@@ -237,11 +246,38 @@ class Simulate {
        } else if (thistile.style.id == World.CONVEYORR) {
 	 // Is the thing atop me conveyed?
 	 var above = get(newworld, x, y - 1);
-	 if (above.style.prop.conveyed) {
+	 if (above.style.prop.conveyed && !just_conveyed) {
 	   if (clearThere(newworld, newworld, x + 1, y - 1)) {
 	     set(newworld, x, y - 1, World.allTiles[World.NOTHING]);
 	     set(newworld, x + 1, y - 1, above);
+	     just_conveyed = true;
+	   } else {
+	     just_conveyed = false;
 	   }
+	 } else {
+	   just_conveyed = false;
+	 }
+       } else {
+	 just_conveyed = false;
+       }
+     }
+   }
+
+   // Pass 4: Kill shit that is dead.
+   for (yinv in 0...World.tilesh) {
+     // Go upward so a whole stack of turtles kills all of
+     // them but the top.
+     var y = World.tilesh - yinv - 1;
+     for (x in 0...World.tilesw) {
+       var thistile = get(newworld, x, y);
+       if (thistile.style.prop.nostep) {
+	 if (steppedOn(newworld, x, y)) {
+	   if (thistile.style.prop.isturtle) {
+	     Achievements.got('killturt');
+	   } else if (thistile.style.id == World.GWILLEN) {
+	     Achievements.got('killgwill');
+	   }
+	   set(newworld, x, y, World.allTiles[World.deathTile(thistile.style.id)]);
 	 }
        }
      }
